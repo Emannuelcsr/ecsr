@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+    "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+
+<!--
+ ===================================================================
+ Arquivo de configuração do Hibernate (hibernate.cfg.xml)
+
+ Finalidade:
+    - Configurar as propriedades principais do Hibernate
+    - Definir a conexão com banco de dados
+    - Especificar o gerenciamento de sessão
+    - Configurar listeners para auditoria (Envers)
+ ===================================================================
+-->
+
+<hibernate-configuration>
+
+	<session-factory name="sessionfactory">
+
+		<!-- Dialeto específico do banco PostgreSQL -->
+		<property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
+
+		<!-- DataSource configurado no servidor de aplicação (Tomcat) -->
+		<property name="hibernate.connection.datasource">java:/comp/env/jdbc/datasource</property>
+		
+
+		<!-- Schema padrão (opcional) -->
+		<property name="hibernate.default_schema"></property>
+
+		<!-- Gerenciamento de sessão atrelado à Thread atual -->
+		<property name="hibernate.current_session_context_class">thread</property>
+
+		<!-- Fábrica de transações (padrão JDBC) -->
+		<property name="hibernate.transaction.factory_class">org.hibernate.transaction.JDBCTransactionFactory</property>
+
+		<!-- Gerenciador de lote de comandos JDBC (modo não batch) -->
+		<property name="hibernate.jdbc.factory_class">org.hibernate.jdbc.NonBatchingBatcherFactory</property>
+
+		<!-- Quantidade de registros processados por lote -->
+		<property name="hibernate.jdbc.batch_size">100</property>
+
+		<!-- Habilita cache de segundo nível (opcional) -->
+		<property name="hibernate.cache.use_second_level_cache">true</property>
+
+		<!-- Fecha sessão automaticamente ao encerrar transação -->
+		<property name="hibernate.transaction.auto_close_session">true</property>
+
+		<!-- Estratégia de atualização automática do banco (create, update, validate, none) -->
+		<property name="hibernate.hbm2ddl.auto">update</property>
+
+		<!-- Exibe as queries SQL no console (false em produção) -->
+		<property name="hibernate.show_sql">false</property>
+
+		<!-- Formata o SQL exibido -->
+		<property name="hibernate.format_sql">true</property>
+
+		<!-- Geração de estatísticas da sessão (false melhora performance) -->
+		<property name="hibernate.generate_statistics">false</property>
+
+		<!-- Inclui comentários nas queries SQL geradas -->
+		<property name="hibernate.use_sql_comments">true</property>
+
+		<!-- Desabilita auto-commit (as transações devem ser controladas explicitamente) -->
+		<property name="hibernate.connection.autocommit">false</property>
+
+		<!-- Define o tamanho do pool de conexões -->
+		<property name="hibernate.connection.pool_size">50</property>
+
+		
+		<mapping class="br.com.project.model.classes.Entidade"></mapping>
+		
+
+		<!-- Listeners do Hibernate Envers para auditoria automática -->
+		<listener class="org.hibernate.envers.event.AuditEventListener" type="post-insert" />
+		<listener class="org.hibernate.envers.event.AuditEventListener" type="post-update" />
+		<listener class="org.hibernate.envers.event.AuditEventListener" type="post-delete" />
+		<listener class="org.hibernate.envers.event.AuditEventListener" type="post-collection-recreate" />
+		<listener class="org.hibernate.envers.event.AuditEventListener" type="post-collection-remove" />
+
+	</session-factory>
+
+</hibernate-configuration>

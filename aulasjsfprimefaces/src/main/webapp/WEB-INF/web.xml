@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	xmlns:jsp="http://java.sun.com/xml/ns/javaee/jsp"
+	xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	id="WebApp_ID" metadata-complete="true" version="3.0">
+	<display-name>Projeto Java Web Com Spring</display-name>
+	<welcome-file-list>
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
+
+	<!-- Configurações da sessão do usuário -->
+	<session-config>
+		<!-- Tempo em minutos para expiração da sessão por inatividade -->
+		<session-timeout>15</session-timeout>
+
+		<!-- Define que o modo de rastreamento de sessão será via cookies -->
+		<tracking-mode>COOKIE</tracking-mode>
+	</session-config>
+
+	<!-- Mapeamento de página de erro para acesso negado pelo Spring Security -->
+	<error-page>
+		<exception-type>org.springframework.security.access.AccessDeniedException</exception-type>
+		<location>/error/acessoNegado.jsf</location>
+	</error-page>
+
+	<!-- Mapeamento de erro para página JSF não encontrada -->
+	<error-page>
+		<exception-type>com.sun.faces.context.FacesFileNotFoundException</exception-type>
+		<location>/error/paginaNaoEncontrada.jsf</location>
+	</error-page>
+
+	<!-- Mapeamento para erro HTTP 403 (proibido) -->
+	<error-page>
+		<exception-type>403</exception-type>
+		<location>/error/acessoNegado.jsf</location>
+	</error-page>
+
+	<!-- Mapeamento para erro HTTP 500 (erro interno do servidor) -->
+	<error-page>
+		<exception-type>500</exception-type>
+		<location>/error/error.jsf</location>
+	</error-page>
+
+	<!-- Parâmetro para remover comentários no HTML gerado pelo Facelets -->
+	<context-param>
+		<param-name>javax.faces.FACELETS_SKIP_COMMENTS</param-name>
+		<param-value>true</param-value>
+	</context-param>
+
+	<!-- Permite texto como filho direto de componentes JSF -->
+	<context-param>
+		<param-name>com.sun.faces.allowTextChildren</param-name>
+		<param-value>true</param-value>
+	</context-param>
+
+	<!-- Define a fábrica de expressões EL usada pelo JSF -->
+	<context-param>
+		<param-name>com.sun.faces.expressionFactory</param-name>
+		<param-value>com.sun.el.ExpressionFactoryImpl</param-value>
+	</context-param>
+
+	<!-- Período de atualização dos arquivos .xhtml. 0 = recarrega sempre (dev) -->
+	<context-param>
+		<param-name>javax.faces.FACELETS_REFRESH_PERIOD</param-name>
+		<param-value>0</param-value>
+	</context-param>
+
+	<!-- Define os sufixos válidos para páginas JSF -->
+	<context-param>
+		<param-name>javax.faces.DEFAULT_SUFFIX</param-name>
+		<param-value>.xhtml .html .jsp</param-value>
+	</context-param>
+
+	<!-- Define o modo de execução do JSF: Production ou Development -->
+	<context-param>
+		<param-name>javax.faces.PROJECT_STAGE</param-name>
+		<param-value>Production</param-value>
+	</context-param>
+
+	<!-- Define o tema do PrimeFaces -->
+	<context-param>
+		<param-name>primefaces.THEME</param-name>
+		<param-value>smoothness</param-value>
+	</context-param>
+
+	<filter>
+		<filter-name>PrimeFaces FileUpload Filter</filter-name>
+		<filter-class>org.primefaces.webapp.filter.FileUploadFilter</filter-class>
+	</filter>
+
+
+	<!-- Filtro do PrimeFaces para upload de arquivos (caso use componentes 
+		<p:fileUpload>) -->
+	<filter-mapping>
+		<filter-name>PrimeFaces FileUpload Filter</filter-name>
+		<servlet-name>Faces Servlets</servlet-name>
+		<url-pattern>*.jsf</url-pattern>
+	</filter-mapping>
+
+	<!-- Declaração de recurso externo: DataSource gerenciado pelo container 
+		(Tomcat) -->
+	<resource-ref>
+		<description>DataSource datasource</description>
+		<res-ref-name>jdbc/datasource</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+	</resource-ref>
+
+	<!-- Servlet principal do JSF que processa as requisições -->
+	<servlet>
+		<servlet-name>Faces Servlet</servlet-name>
+		<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+		<load-on-startup>1</load-on-startup> <!-- Inicializa ao subir o servidor -->
+	</servlet>
+
+	<!-- Define que todas as URLs terminadas em .jsf serão tratadas pelo JSF -->
+	<servlet-mapping>
+		<servlet-name>Faces Servlet</servlet-name>
+		<url-pattern>*.jsf</url-pattern>
+	</servlet-mapping>
+
+
+
+</web-app>
