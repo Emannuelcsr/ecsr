@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+           http://www.springframework.org/schema/mvc 
+           http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+           http://www.springframework.org/schema/beans 
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+           http://www.springframework.org/schema/context 
+           http://www.springframework.org/schema/context/spring-context-3.0.xsd
+           http://www.springframework.org/schema/tx 
+           http://www.springframework.org/schema/tx/spring-tx-3.0.xsd"
+	default-lazy-init="true">
+
+	<!-- Habilita o suporte às anotações do Spring como @Autowired, @PostConstruct, 
+		etc -->
+	<context:annotation-config />
+
+	<!-- Habilita o suporte a @Controller, @RequestMapping, @ResponseBody, etc -->
+	<mvc:annotation-driven />
+
+	<!-- Permite que recursos estáticos (JS, CSS, imagens) sejam manipulados 
+		pelo servlet padrão do contêiner -->
+	<mvc:default-servlet-handler />
+
+	<!-- Mapeamento de recursos estáticos para cache -->
+	<mvc:resources location="/resources/img"
+		mapping="/resources/**" cache-period="5000" />
+
+	<!-- Component-scan: registra beans baseados em anotações nos pacotes informados -->
+	<context:component-scan
+		base-package="br.com.project.geral.controller" />
+	<context:component-scan
+		base-package="br.com.srv.interfaces" />
+	<context:component-scan
+		base-package="br.com.srv.implementacao" />
+	<context:component-scan
+		base-package="br.com.repository.interfaces" />
+	<context:component-scan
+		base-package="br.com.dao.implementacao" />
+	<context:component-scan
+		base-package="br.com.project.bean.view" />
+	<context:component-scan
+		base-package="br.com.project.been.geral" />
+	<context:component-scan
+		base-package="br.com.project.report.util" />
+	<context:component-scan
+		base-package="br.com.project.util.all" />
+	<context:component-scan
+		base-package="br.com.project.bean.view.grafico" />
+	<context:component-scan
+		base-package="br.com.framework.controller.crud" />
+	<context:component-scan
+		base-package="br.com.framwork.interfac.crud" />
+
+	<!-- Define o DataSource via JNDI configurado no Tomcat (context.xml) -->
+	<bean id="springDataSource" name="springDataSource"
+		class="org.springframework.jndi.JndiObjectFactoryBean"
+		lazy-init="false">
+		<property name="jndiName">
+			<value>java:/comp/env/jdbc/datasource</value>
+		</property>
+	</bean>
+
+	<!-- Configura o Flyway para versionamento e migração de banco de dados -->
+	<bean id="flyway" class="org.flywaydb.core.Flyway"
+		init-method="migrate" lazy-init="false">
+		<property name="dataSource" ref="springDataSource" />
+		<property name="baselineOnMigrate" value="true" />
+		<property name="table" value="version" />
+		<property name="sqlMigrationPrefix" value="v" />
+		<property name="sqlMigrationSeparator" value="_" />
+		<property name="encoding" value="ISO-8859-1" />
+		<property name="validateOnMigrate" value="true" />
+	</bean>
+
+	<!-- Gerenciador de transações do Spring para JDBC -->
+	<bean id="transactionManager" name="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager"
+		lazy-init="false">
+		<property name="dataSource" ref="springDataSource" />
+	</bean>
+
+	<!-- Implementação customizada do JdbcTemplate usando seu framework -->
+	<bean id="jdbcTemplate" name="jdbcTemplate"
+		class="br.com.framwork.implementacao.crud.JDBCTemplateImpl">
+		<constructor-arg name="dataSource"
+			ref="springDataSource" />
+	</bean>
+
+	<!-- Implementação customizada do SimpleJdbcTemplate -->
+	<bean id="simpleJdbcTemplate" name="simpleJdbcTemplate"
+		class="br.com.framwork.implementacao.crud.SimpleJDBCTemplateImpl">
+		<constructor-arg name="dataSource"
+			ref="springDataSource" />
+	</bean>
+
+	<!-- Implementação customizada do SimpleJdbcInsert -->
+	<bean id="simpleJdbcInsert" name="simpleJdbcInsert"
+		class="br.com.framwork.implementacao.crud.SimpleJDBCInsertImpl">
+		<constructor-arg name="dataSource"
+			ref="springDataSource" />
+	</bean>
+
+	<!-- Classe utilitária customizada para operações JDBC -->
+	<bean id="simpleJdbcClassImpl" name="simpleJdbcClassImpl"
+		class="br.com.framwork.implementacao.crud.SimpleJDBCClassImpl">
+		<constructor-arg name="dataSource"
+			ref="springDataSource" />
+	</bean>
+
+</beans>

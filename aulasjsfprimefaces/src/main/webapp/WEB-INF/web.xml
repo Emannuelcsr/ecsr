@@ -38,6 +38,11 @@ http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
 		<location>/error/acessoNegado.jsf</location>
 	</error-page>
 
+	<error-page>
+		<exception-type>404</exception-type>
+		<location>/error/404.jsf</location>
+	</error-page>
+
 	<!-- Mapeamento para erro HTTP 500 (erro interno do servidor) -->
 	<error-page>
 		<exception-type>500</exception-type>
