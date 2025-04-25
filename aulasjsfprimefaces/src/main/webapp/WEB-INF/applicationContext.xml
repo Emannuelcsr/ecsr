@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:mvc="http://www.springframework.org/schema/mvc"
-	xmlns:tx="http://www.springframework.org/schema/tx"
-	xsi:schemaLocation="
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="
            http://www.springframework.org/schema/mvc 
            http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
            http://www.springframework.org/schema/beans 
@@ -13,103 +13,192 @@
            http://www.springframework.org/schema/context/spring-context-3.0.xsd
            http://www.springframework.org/schema/tx 
            http://www.springframework.org/schema/tx/spring-tx-3.0.xsd"
-	default-lazy-init="true">
+       default-lazy-init="true">
 
-	<!-- Habilita o suporte às anotações do Spring como @Autowired, @PostConstruct, 
-		etc -->
-	<context:annotation-config />
 
-	<!-- Habilita o suporte a @Controller, @RequestMapping, @ResponseBody, etc -->
-	<mvc:annotation-driven />
+    <!-- ========================================================= -->
+    <!-- 🔧 Configurações Globais do Spring MVC                   -->
+    <!-- ========================================================= -->
 
-	<!-- Permite que recursos estáticos (JS, CSS, imagens) sejam manipulados 
-		pelo servlet padrão do contêiner -->
-	<mvc:default-servlet-handler />
+    <!-- 💬 Suporte a anotações como @Autowired, @PostConstruct -->
+    <context:annotation-config />
 
-	<!-- Mapeamento de recursos estáticos para cache -->
-	<mvc:resources location="/resources/img"
-		mapping="/resources/**" cache-period="5000" />
+    <!-- 💬 Suporte a @Controller, @RequestMapping, etc -->
+    <mvc:annotation-driven />
 
-	<!-- Component-scan: registra beans baseados em anotações nos pacotes informados -->
-	<context:component-scan
-		base-package="br.com.project.geral.controller" />
-	<context:component-scan
-		base-package="br.com.srv.interfaces" />
-	<context:component-scan
-		base-package="br.com.srv.implementacao" />
-	<context:component-scan
-		base-package="br.com.repository.interfaces" />
-	<context:component-scan
-		base-package="br.com.dao.implementacao" />
-	<context:component-scan
-		base-package="br.com.project.bean.view" />
-	<context:component-scan
-		base-package="br.com.project.been.geral" />
-	<context:component-scan
-		base-package="br.com.project.report.util" />
-	<context:component-scan
-		base-package="br.com.project.util.all" />
-	<context:component-scan
-		base-package="br.com.project.bean.view.grafico" />
-	<context:component-scan
-		base-package="br.com.framework.controller.crud" />
-	<context:component-scan
-		base-package="br.com.framwork.interfac.crud" />
+    <!-- 💬 Suporte a recursos estáticos pelo servlet padrão -->
+    <mvc:default-servlet-handler />
 
-	<!-- Define o DataSource via JNDI configurado no Tomcat (context.xml) -->
-	<bean id="springDataSource" name="springDataSource"
-		class="org.springframework.jndi.JndiObjectFactoryBean"
-		lazy-init="false">
-		<property name="jndiName">
-			<value>java:/comp/env/jdbc/datasource</value>
-		</property>
-	</bean>
+    <!-- 💬 Cache e mapeamento de arquivos estáticos (img, css, js) -->
+    <mvc:resources location="/resources/img"
+                   mapping="/resources/**"
+                   cache-period="5000" />
 
-	<!-- Configura o Flyway para versionamento e migração de banco de dados -->
-	<bean id="flyway" class="org.flywaydb.core.Flyway"
-		init-method="migrate" lazy-init="false">
-		<property name="dataSource" ref="springDataSource" />
-		<property name="baselineOnMigrate" value="true" />
-		<property name="table" value="version" />
-		<property name="sqlMigrationPrefix" value="v" />
-		<property name="sqlMigrationSeparator" value="_" />
-		<property name="encoding" value="ISO-8859-1" />
-		<property name="validateOnMigrate" value="true" />
-	</bean>
 
-	<!-- Gerenciador de transações do Spring para JDBC -->
-	<bean id="transactionManager" name="transactionManager"
-		class="org.springframework.jdbc.datasource.DataSourceTransactionManager"
-		lazy-init="false">
-		<property name="dataSource" ref="springDataSource" />
-	</bean>
 
-	<!-- Implementação customizada do JdbcTemplate usando seu framework -->
-	<bean id="jdbcTemplate" name="jdbcTemplate"
-		class="br.com.framwork.implementacao.crud.JDBCTemplateImpl">
-		<constructor-arg name="dataSource"
-			ref="springDataSource" />
-	</bean>
+    <!-- ========================================================= -->
+    <!-- 🧭 Component-Scan: Localização de Beans Spring           -->
+    <!-- ========================================================= -->
 
-	<!-- Implementação customizada do SimpleJdbcTemplate -->
-	<bean id="simpleJdbcTemplate" name="simpleJdbcTemplate"
-		class="br.com.framwork.implementacao.crud.SimpleJDBCTemplateImpl">
-		<constructor-arg name="dataSource"
-			ref="springDataSource" />
-	</bean>
+    <context:component-scan base-package="br.com.project.geral.controller" />
+    <context:component-scan base-package="br.com.srv.interfaces" />
+    <context:component-scan base-package="br.com.srv.implementacao" />
+    <context:component-scan base-package="br.com.repository.interfaces" />
+    <context:component-scan base-package="br.com.dao.implementacao" />
+    <context:component-scan base-package="br.com.project.bean.view" />
+    <context:component-scan base-package="br.com.project.been.geral" />
+    <context:component-scan base-package="br.com.project.report.util" />
+    <context:component-scan base-package="br.com.project.util.all" />
+    <context:component-scan base-package="br.com.project.bean.view.grafico" />
+    <context:component-scan base-package="br.com.framework.controller.crud" />
+    <context:component-scan base-package="br.com.framwork.interfac.crud" />
 
-	<!-- Implementação customizada do SimpleJdbcInsert -->
-	<bean id="simpleJdbcInsert" name="simpleJdbcInsert"
-		class="br.com.framwork.implementacao.crud.SimpleJDBCInsertImpl">
-		<constructor-arg name="dataSource"
-			ref="springDataSource" />
-	</bean>
 
-	<!-- Classe utilitária customizada para operações JDBC -->
-	<bean id="simpleJdbcClassImpl" name="simpleJdbcClassImpl"
-		class="br.com.framwork.implementacao.crud.SimpleJDBCClassImpl">
-		<constructor-arg name="dataSource"
-			ref="springDataSource" />
-	</bean>
+
+    <!-- ========================================================= -->
+    <!-- 💾 DataSource JNDI do Tomcat                             -->
+    <!-- ========================================================= -->
+
+    <bean id="springDataSource" name="springDataSource"
+          class="org.springframework.jndi.JndiObjectFactoryBean"
+          lazy-init="false">
+        <property name="jndiName">
+            <value>java:/comp/env/jdbc/datasource</value>
+        </property>
+    </bean>
+
+
+
+    <!-- ========================================================= -->
+    <!-- 🐦 Flyway: Migração e versionamento de banco de dados    -->
+    <!-- ========================================================= -->
+
+    <bean id="flyway" class="org.flywaydb.core.Flyway"
+          init-method="migrate" lazy-init="false">
+        <property name="dataSource" ref="springDataSource" />
+        <property name="baselineOnMigrate" value="true" />
+        <property name="table" value="version" />
+        <property name="sqlMigrationPrefix" value="v" />
+        <property name="sqlMigrationSeparator" value="_" />
+        <property name="encoding" value="ISO-8859-1" />
+        <property name="validateOnMigrate" value="true" />
+    </bean>
+
+
+
+    <!-- ========================================================= -->
+    <!-- 🔁 Gerenciamento de Transações JDBC                      -->
+    <!-- ========================================================= -->
+
+    <bean id="transactionManager" name="transactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager"
+          lazy-init="false">
+        <property name="dataSource" ref="springDataSource" />
+    </bean>
+
+
+
+    <!-- ========================================================= -->
+    <!-- 🛠️ Beans Customizados para Acesso JDBC                  -->
+    <!-- ========================================================= -->
+
+    <!-- ✅ JdbcTemplate customizado -->
+    <bean id="jdbcTemplate" name="jdbcTemplate"
+          class="br.com.framwork.implementacao.crud.JDBCTemplateImpl">
+        <constructor-arg name="dataSource" ref="springDataSource" />
+    </bean>
+
+    <!-- ✅ SimpleJdbcTemplate customizado -->
+    <bean id="simpleJdbcTemplate" name="simpleJdbcTemplate"
+          class="br.com.framwork.implementacao.crud.SimpleJDBCTemplateImpl">
+        <constructor-arg name="dataSource" ref="springDataSource" />
+    </bean>
+
+    <!-- ✅ SimpleJdbcInsert customizado -->
+    <bean id="simpleJdbcInsert" name="simpleJdbcInsert"
+          class="br.com.framwork.implementacao.crud.SimpleJDBCInsertImpl">
+        <constructor-arg name="dataSource" ref="springDataSource" />
+    </bean>
+
+    <!-- ✅ Classe utilitária JDBC -->
+    <bean id="simpleJdbcClassImpl" name="simpleJdbcClassImpl"
+          class="br.com.framwork.implementacao.crud.SimpleJDBCClassImpl">
+        <constructor-arg name="dataSource" ref="springDataSource" />
+    </bean>
+
+
+
+    <!-- ========================================================= -->
+    <!-- 🌐 Mapeamento de URLs via SimpleUrlHandlerMapping       -->
+    <!-- ========================================================= -->
+
+    <bean id="urlMapping"
+          class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping"
+          lazy-init="false">
+        <property name="mappings">
+            <props>
+                <prop key="/index.jsp">indexController</prop>
+            </props>
+        </property>
+    </bean>
+
+
+
+    <!-- ========================================================= -->
+    <!-- 🖼️ ViewResolver para localizar páginas de view          -->
+    <!-- ========================================================= -->
+
+    <bean id="viewResolver"
+          class="org.springframework.web.servlet.view.InternalResourceViewResolver"
+          lazy-init="false">
+        <property name="viewClass"
+                  value="org.springframework.web.servlet.view.JstlView" />
+        <property name="prefix" value="/src/" />
+        <property name="suffix"
+                  value="*.jsf, *.xhtml, *.html, *,jsp, *.js" />
+    </bean>
+
+
+
+    <!-- ========================================================= -->
+    <!-- 🧩 Controller direto para "/index.jsp" sem lógica        -->
+    <!-- ========================================================= -->
+
+    <bean name="indexController" lazy-init="false"
+          class="org.springframework.web.servlet.mvc.ParameterizableViewController" />
+
+
+
+    <!-- ========================================================= -->
+    <!-- 👁️ Registro do escopo "view" no Spring                 -->
+    <!-- ========================================================= -->
+
+    <bean class="org.springframework.beans.factory.config.CustomScopeConfigurer"
+          lazy-init="false">
+        <property name="scopes">
+            <map>
+                <entry key="view">
+                    <bean class="br.com.project.been.geral.ViewScope" />
+                </entry>
+            </map>
+        </property>
+    </bean>
+
+
+
+    <!-- ========================================================= -->
+    <!-- 📊 Beans utilitários (Relatórios e Framework)           -->
+    <!-- ========================================================= -->
+
+    <!-- 📝 Utilitário para geração de relatórios -->
+    <bean id="reportUtil"
+          class="br.com.project.report.util.ReportUtil" />
+
+    <!-- 🧠 Utilitário de sessão com funções auxiliares -->
+    <bean id="utilFramework"
+          class="br.com.frameworks.utils.utilFramework"
+          scope="session" />
+
+
 
 </beans>

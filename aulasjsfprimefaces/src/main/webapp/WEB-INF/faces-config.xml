@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <!-- 
   Arquivo de configuração do JSF (JavaServer Faces) 2.0.
-  Define configurações globais da aplicação, como integração com Spring, escopos customizados (ViewScope),
-  e handlers do PrimeFaces para diálogos.
+  Define configurações globais da aplicação, como:
+  - Integração com o Spring Framework
+  - Suporte a escopos customizados (ex: ViewScope)
+  - Configurações especiais do PrimeFaces para suporte a diálogos
+  - Tratamento de exceções com handler customizado
 -->
 
 <faces-config version="2.0"
@@ -10,18 +14,24 @@
     xmlns:xi="http://www.w3.org/2001/XInclude"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
-    http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
+                        http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
 
-    <!-- Seção de configurações gerais da aplicação -->
+    <!-- ======================================================================== -->
+    <!-- 🔧 Seção: Configurações da Aplicação                                    -->
+    <!-- ======================================================================== -->
+    
     <application>
 
-        <!-- Integração com Spring: permite usar beans gerenciados pelo Spring no JSF via EL (#{bean}). -->
+        <!-- 🎯 Integração com Spring:
+             Permite usar beans do Spring diretamente nas páginas JSF (via EL, ex: #{meuBean}).
+        -->
         <el-resolver>org.springframework.web.jsf.el.SpringBeanFacesELResolver</el-resolver>
 
-        <!-- 
-          Configura listeners para o escopo customizado "ViewScope":
-          - Registra callbacks quando a view é criada (PostConstructViewMapEvent) ou destruída (PreDestroyViewMapEvent).
-          - Útil para limpar recursos ou estados do escopo de view.
+
+        <!-- 📌 Suporte ao escopo ViewScope com callbacks de ciclo de vida:
+             - PostConstructViewMapEvent: Quando a view é criada
+             - PreDestroyViewMapEvent: Quando a view é destruída
+             - Register: Classe que escuta os eventos e executa callbacks necessários
         -->
         <system-event-listener>
             <system-event-listener-class>br.com.project.been.geral.ViewScopeCallBackRegister</system-event-listener-class>
@@ -35,26 +45,33 @@
             <source-class>javax.faces.component.UIViewRoot</source-class>
         </system-event-listener>
 
-        <!-- 
-          Configurações do PrimeFaces para diálogos:
-          - DialogActionListener: Gerencia ações em diálogos (ex: abrir/fechar).
-          - DialogNavigationHandler: Controla navegação entre diálogos.
-          - DialogViewHandler: Customiza o carregamento de views em diálogos.
+
+        <!-- 💬 Integração com diálogos do PrimeFaces:
+             - DialogActionListener: Trata ações internas dos diálogos (botões, eventos)
+             - DialogNavigationHandler: Controla a navegação entre diálogos
+             - DialogViewHandler: Responsável por renderizar views dentro de diálogos
         -->
         <action-listener>org.primefaces.application.DialogActionListener</action-listener>
         <navigation-handler>org.primefaces.application.DialogNavigationHandler</navigation-handler>
         <view-handler>org.primefaces.application.DialogViewHandler</view-handler>
+
     </application>
-    
+
+
+    <!-- ======================================================================== -->
+    <!-- 🏭 Seção: Fábricas customizadas (Factories)                             -->
+    <!-- ======================================================================== -->
+
     <factory>
-    
-        <!-- 
-      Configura uma fábrica de Exception Handler customizada para o JSF.
-      - Substitui o tratamento padrão de exceções do JSF por uma implementação específica do projeto.
-      - Útil para centralizar o tratamento de erros, logar exceções ou exibir mensagens amigáveis.
-    -->
-    <exception-handler-factory>br.com.project.exception.CustomExceptionHandleFactory</exception-handler-factory>
+
+        <!-- ⚠️ Handler customizado de exceções:
+             - Substitui o tratamento padrão de erros JSF
+             - Permite logar, exibir mensagens customizadas, ou tomar ações específicas
+        -->
+        <exception-handler-factory>
+            br.com.project.exception.CustomExceptionHandleFactory
+        </exception-handler-factory>
+
     </factory>
-    
-    
+
 </faces-config>

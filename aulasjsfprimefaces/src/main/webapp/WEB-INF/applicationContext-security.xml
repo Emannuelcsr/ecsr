@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Configuração do Spring Security 3.1 para controle de autenticação e 
+	autorização. -->
+<b:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:b="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+http://www.springframework.org/schema/security
+http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+
+	<!-- Habilita a segurança baseada em anotações como @Secured em métodos. -->
+	<global-method-security
+		secured-annotations="enabled" />
+
+	<!-- Bloco principal de configuração HTTP: - auto-config="true": habilita 
+		configuração automática do formulário de login. - access-denied-page: página 
+		para onde será redirecionado se o acesso for negado. - use-expressions: permite 
+		uso de expressões SpEL em regras de acesso. -->
+	<http auto-config="true"
+		access-denied-page="/error/acessoNegado.xhtml" use-expressions="true">
+
+		<!-- Restringe o acesso ao recurso a usuários com a role ADMIN, apenas 
+			via POST. -->
+		<intercept-url pattern="/cadastro/cad_permissao.jsf"
+			access="hasAnyRole('ADMIN')" method="POST" />
+
+		<!-- Proteção de recursos estáticos. OBS: existe um erro de sintaxe aqui 
+			→ '**]' Deve ser: ** (sem colchete) -->
+		<intercept-url pattern="/resources/components/**"
+			access="isAuthenticated() and hasAnyRole('USER')" />
+
+		<!-- Protege todos os recursos em /resources (imagens, JS, CSS etc). -->
+		<intercept-url pattern="/resources/**"
+			access="isAuthenticated() and hasAnyRole('USER')" />
+
+		<!-- Protege diretório restrito, apenas usuários autenticados com perfil 
+			USER. -->
+		<intercept-url pattern="/restrito/**"
+			access="isAuthenticated() and hasAnyRole('USER')" />
+
+		<!-- Permite acesso às páginas de erro para qualquer estado de autenticação. -->
+		<intercept-url pattern="/error/**"
+			access="isAnonymous() or isAuthenticated() or !isAuthenticated()" />
+
+		<!-- Acesso autenticado para templates JSF. -->
+		<intercept-url pattern="/templates/**"
+			access="isAuthenticated() and hasAnyRole('USER')" />
+
+		<!-- Acesso às telas de cadastro apenas para usuários autenticados com 
+			role USER. -->
+		<intercept-url pattern="/cadastro/**"
+			access="isAuthenticated() and hasAnyRole('USER')" />
+
+		<!-- Acesso público liberado (ex: login, cadastro aberto, ajuda etc). -->
+		<intercept-url pattern="/publico/**" access="permitAll" />
+
+		<!-- Formulário de login: - login-page: URL da tela de login. - default-target-url: 
+			página de destino após login bem-sucedido. - authentication-failure-url: 
+			página com parâmetro indicando falha de login. -->
+		<form-login login-page="/publico/login.jsf"
+			always-use-default-target="true"
+			default-target-url="/restrito/principal.jsf"
+			authentication-failure-url="/publico/login.jsf?login_error=1" />
+
+		<!-- Logout: - Invalida a sessão, limpa cookies e redireciona para tela 
+			de login. -->
+		<logout invalidate-session="true"
+			logout-success-url="/publico/login.jsf"
+			logout-url="/j_spring_security_logout" delete-cookies="JSESSIONID" />
+
+		<!-- "Remember-me": - Permite manter o login ativo por 14 dias (1209600 
+			segundos). -->
+		<remember-me token-validity-seconds="1209600" />
+
+		<!-- Gerenciamento de sessão: - Se a sessão for inválida, redireciona para 
+			login. - Proteção contra fixação de sessão. - Limita a 1 sessão simultânea 
+			por usuário. -->
+		<session-management
+			invalid-session-url="/publico/login.jsf"
+			session-fixation-protection="migrateSession">
+
+			<concurrency-control max-sessions="1"
+				expired-url="/publico/login.jsf" error-if-maximum-exceeded="true" />
+		</session-management>
+
+	</http>
+
+
+	<authentication-manager>
+		<authentication-provider>
+			<password-encoder hash="plaintext" />
+			<jdbc-user-service
+				data-source-ref="springDataSource"
+
+				users-by-username-query="SELECT ent_login as username,
+										ent_senha as password,
+										'true' as enable from entidade  where ent_inativo = false
+										and upper(ent_login) = upper(?)
+												"
+
+				authorities-by-username-query="	select u.ent_login as username,
+												p.esa_codigo as authority
+												from entidade u 
+												join entidadeacesso p
+												on u.ent_codigo = p.ent_codigo
+												where u.ent_inativo = false
+												and upper(u.ent_login) = upper(?)" 
+												/>
+		</authentication-provider>
+
+	</authentication-manager>
+
+</b:beans>

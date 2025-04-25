@@ -28,7 +28,7 @@ import org.springframework.web.context.request.FacesRequestAttributes;
  * - Documentação Oficial Spring: {@link org.springframework.beans.factory.config.Scope}
  * - Documentação JSF: {@link javax.faces.component.UIViewRoot#getViewMap()}
  * 
- * @author Emannuel Souza
+ * 
  */
 
 

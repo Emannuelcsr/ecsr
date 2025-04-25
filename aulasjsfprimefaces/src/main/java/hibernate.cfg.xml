@@ -77,7 +77,8 @@
 		<listener class="org.hibernate.envers.event.AuditEventListener" type="post-update" />
 		<listener class="org.hibernate.envers.event.AuditEventListener" type="post-delete" />
 		<listener class="org.hibernate.envers.event.AuditEventListener" type="post-collection-recreate" />
-		<listener class="org.hibernate.envers.event.AuditEventListener" type="post-collection-remove" />
+		<listener class="org.hibernate.envers.event.AuditEventListener" type="pre-collection-update" />
+		<listener class="org.hibernate.envers.event.AuditEventListener" type="pre-collection-remove" />
 
 	</session-factory>
 

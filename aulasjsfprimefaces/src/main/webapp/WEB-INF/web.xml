@@ -1,55 +1,95 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Arquivo web.xml - Configuração central da aplicação Java Web Projeto 
+	com JSF, Spring Framework, PrimeFaces, JNDI e Segurança -->
+
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns="http://java.sun.com/xml/ns/javaee"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
-http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+                             http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
 	xmlns:jsp="http://java.sun.com/xml/ns/javaee/jsp"
 	xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	id="WebApp_ID" metadata-complete="true" version="3.0">
+
+
+
+	<!-- ========================================================== 📛 Nome 
+		do projeto (aparece no console do servidor) =========================================================== -->
 	<display-name>Projeto Java Web Com Spring</display-name>
+
+
+
+	<!-- ========================================================== 🏠 Página 
+		de boas-vindas da aplicação =========================================================== -->
 	<welcome-file-list>
 		<welcome-file>index.jsp</welcome-file>
 	</welcome-file-list>
 
-	<!-- Configurações da sessão do usuário -->
+
+
+	<!-- ========================================================== ⏳ Configurações 
+		de sessão =========================================================== -->
 	<session-config>
-		<!-- Tempo em minutos para expiração da sessão por inatividade -->
+		<!-- Tempo de inatividade em minutos -->
 		<session-timeout>15</session-timeout>
 
-		<!-- Define que o modo de rastreamento de sessão será via cookies -->
+		<!-- Rastreio de sessão via COOKIE (padrão) -->
 		<tracking-mode>COOKIE</tracking-mode>
 	</session-config>
 
-	<!-- Mapeamento de página de erro para acesso negado pelo Spring Security -->
+
+
+	<!-- ========================================================== 🛑 Mapeamentos 
+		de páginas de erro personalizadas =========================================================== -->
+
+
+	<!-- Exceção específica: Acesso negado pelo Spring Security -->
 	<error-page>
 		<exception-type>org.springframework.security.access.AccessDeniedException</exception-type>
 		<location>/error/acessoNegado.jsf</location>
 	</error-page>
 
-	<!-- Mapeamento de erro para página JSF não encontrada -->
+	<!-- Exceção específica: Página JSF não encontrada -->
 	<error-page>
 		<exception-type>com.sun.faces.context.FacesFileNotFoundException</exception-type>
 		<location>/error/paginaNaoEncontrada.jsf</location>
 	</error-page>
 
-	<!-- Mapeamento para erro HTTP 403 (proibido) -->
+	<!-- Código HTTP 403: Acesso proibido -->
 	<error-page>
-		<exception-type>403</exception-type>
+		<error-code>403</error-code>
 		<location>/error/acessoNegado.jsf</location>
 	</error-page>
 
+	<!-- Código HTTP 404: Página não encontrada -->
 	<error-page>
-		<exception-type>404</exception-type>
+		<error-code>404</error-code>
 		<location>/error/404.jsf</location>
 	</error-page>
 
-	<!-- Mapeamento para erro HTTP 500 (erro interno do servidor) -->
+	<!-- Código HTTP 500: Erro interno do servidor -->
 	<error-page>
-		<exception-type>500</exception-type>
+		<error-code>500</error-code>
 		<location>/error/error.jsf</location>
 	</error-page>
 
-	<!-- Parâmetro para remover comentários no HTML gerado pelo Facelets -->
+
+
+	<!-- ========================================================== 🧾 Configurações 
+		JSP (caso use .jsp no projeto) =========================================================== -->
+	<jsp-config>
+		<jsp-property-group>
+			<url-pattern>/**</url-pattern>
+			<el-ignored>false</el-ignored>
+		</jsp-property-group>
+	</jsp-config>
+
+
+
+	<!-- ========================================================== ⚙️ Parâmetros 
+		de contexto - JSF, Spring e PrimeFaces =========================================================== -->
+
+	<!-- Remove comentários do HTML gerado por Facelets -->
 	<context-param>
 		<param-name>javax.faces.FACELETS_SKIP_COMMENTS</param-name>
 		<param-value>true</param-value>
@@ -61,52 +101,131 @@ http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
 		<param-value>true</param-value>
 	</context-param>
 
-	<!-- Define a fábrica de expressões EL usada pelo JSF -->
+	<!-- Define a ExpressionFactory do JSF -->
 	<context-param>
 		<param-name>com.sun.faces.expressionFactory</param-name>
 		<param-value>com.sun.el.ExpressionFactoryImpl</param-value>
 	</context-param>
 
-	<!-- Período de atualização dos arquivos .xhtml. 0 = recarrega sempre (dev) -->
+	<!-- Arquivos de configuração Spring -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>
+            /WEB-INF/applicationContext.xml
+            /WEB-INF/spring-servlet-servlet.xml
+            /WEB-INF/applicationContext-security.xml
+        </param-value>
+	</context-param>
+
+	<!-- Define frequência de atualização dos arquivos Facelets -->
 	<context-param>
 		<param-name>javax.faces.FACELETS_REFRESH_PERIOD</param-name>
 		<param-value>0</param-value>
 	</context-param>
 
-	<!-- Define os sufixos válidos para páginas JSF -->
+	<!-- Extensões padrão para páginas JSF -->
 	<context-param>
 		<param-name>javax.faces.DEFAULT_SUFFIX</param-name>
 		<param-value>.xhtml .html .jsp</param-value>
 	</context-param>
 
-	<!-- Define o modo de execução do JSF: Production ou Development -->
+	<!-- Define o modo de execução do JSF -->
 	<context-param>
 		<param-name>javax.faces.PROJECT_STAGE</param-name>
 		<param-value>Production</param-value>
 	</context-param>
 
-	<!-- Define o tema do PrimeFaces -->
+	<!-- Define tema visual do PrimeFaces -->
 	<context-param>
 		<param-name>primefaces.THEME</param-name>
 		<param-value>smoothness</param-value>
 	</context-param>
 
+
+
+	<!-- ========================================================== 🧱 Filtros 
+		da aplicação (JSF, Spring, Encoding, Upload) =========================================================== -->
+
+	<!-- Hibernate - OpenSessionInView -->
+	<filter>
+		<filter-name>conexaoFilter</filter-name>
+		<filter-class>br.com.project.filter.FilterOpenSessionInView</filter-class>
+	</filter>
+
+	<!-- Spring Security -->
+	<filter>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+	</filter>
+
+	<!-- Força o encoding nas requisições/respostas -->
+	<filter>
+		<filter-name>encoding-filter</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>ISO-8859-1</param-value>
+		</init-param>
+	</filter>
+
+	<!-- Filtro de upload de arquivos do PrimeFaces -->
 	<filter>
 		<filter-name>PrimeFaces FileUpload Filter</filter-name>
 		<filter-class>org.primefaces.webapp.filter.FileUploadFilter</filter-class>
 	</filter>
 
 
-	<!-- Filtro do PrimeFaces para upload de arquivos (caso use componentes 
-		<p:fileUpload>) -->
+
+	<!-- ========================================================== 🔗 Mapeamento 
+		dos filtros =========================================================== -->
+
+	<!-- PrimeFaces FileUpload: apenas em páginas JSF -->
 	<filter-mapping>
 		<filter-name>PrimeFaces FileUpload Filter</filter-name>
 		<servlet-name>Faces Servlets</servlet-name>
 		<url-pattern>*.jsf</url-pattern>
 	</filter-mapping>
 
-	<!-- Declaração de recurso externo: DataSource gerenciado pelo container 
-		(Tomcat) -->
+	<!-- Demais filtros aplicados a todas as URLs -->
+	<filter-mapping>
+		<filter-name>encoding-filter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<filter-mapping>
+		<filter-name>conexaoFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<filter-mapping>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+
+
+	<!-- ========================================================== 🎧 Listeners 
+		da aplicação =========================================================== -->
+	<listener>
+		<listener-class>br.com.project.listener.ContextLoaderListenerECSRUtils</listener-class>
+	</listener>
+
+	<listener>
+		<listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+	</listener>
+
+	<listener>
+		<listener-class>br.com.project.listener.CustomListener</listener-class>
+	</listener>
+
+	<listener>
+		<listener-class>org.springframework.security.web.session.HttpSessionEventPublisher</listener-class>
+	</listener>
+
+
+
+	<!-- ========================================================== 🗄️ Recurso 
+		externo - DataSource via JNDI (Tomcat) =========================================================== -->
 	<resource-ref>
 		<description>DataSource datasource</description>
 		<res-ref-name>jdbc/datasource</res-ref-name>
@@ -114,14 +233,30 @@ http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
 		<res-auth>Container</res-auth>
 	</resource-ref>
 
-	<!-- Servlet principal do JSF que processa as requisições -->
+
+
+	<!-- ========================================================== ⚙️ Servlets 
+		principais - Spring MVC e JSF =========================================================== -->
+
+	<!-- Spring DispatcherServlet -->
+	<servlet>
+		<servlet-name>spring-servlet</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>spring-servlet</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+
+	<!-- JSF FacesServlet -->
 	<servlet>
 		<servlet-name>Faces Servlet</servlet-name>
 		<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
-		<load-on-startup>1</load-on-startup> <!-- Inicializa ao subir o servidor -->
+		<load-on-startup>1</load-on-startup>
 	</servlet>
 
-	<!-- Define que todas as URLs terminadas em .jsf serão tratadas pelo JSF -->
 	<servlet-mapping>
 		<servlet-name>Faces Servlet</servlet-name>
 		<url-pattern>*.jsf</url-pattern>

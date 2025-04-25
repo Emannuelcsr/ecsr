@@ -17,12 +17,18 @@ import org.hibernate.envers.Audited;
  * dessa tabela será auditada automaticamente pelo Hibernate Envers, gerando
  * entradas de histórico com quem alterou, quando e o que foi modificado.
  */
+
+
+
+//----------------------------------------------------------------------------------------------------------------------------------------
 @Audited
 @Entity
 public class Entidade implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	
+	
 	/**
 	 * Identificador único da entidade (chave primária).
 	 * Representa o código do usuário.
@@ -30,18 +36,33 @@ public class Entidade implements Serializable {
 	@Id
 	private Long ent_codigo;
 
+	
+	
+	
 	/**
 	 * Login do usuário. Usado para autenticação.
 	 */
 	private String ent_login = null;
 
+	
+	
+	
 	/**
 	 * Senha do usuário.
 	 */
 	private String ent_senha;
+	
+	
+	private boolean ent_inativo = false;
+	
+	
+	
 
-	// Getters e Setters
+//------------------------ Getters e Setters------------------------------------------------------------------------------------------------
 
+	
+	
+	
 	/**
 	 * Recupera o login do usuário.
 	 */
@@ -83,4 +104,13 @@ public class Entidade implements Serializable {
 	public Long getEnt_codigo() {
 		return ent_codigo;
 	}
+	
+	public void setEnt_inativo(boolean ent_inativo) {
+		this.ent_inativo = ent_inativo;
+	}
+	
+	public boolean getEnt_inativo() {
+		return ent_inativo;
+	}
+	
 }
