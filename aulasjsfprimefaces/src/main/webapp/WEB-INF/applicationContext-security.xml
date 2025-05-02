@@ -62,6 +62,7 @@ http://www.springframework.org/schema/security/spring-security-3.1.xsd">
 			always-use-default-target="true"
 			default-target-url="/restrito/principal.jsf"
 			authentication-failure-url="/publico/login.jsf?login_error=1" />
+			
 
 		<!-- Logout: - Invalida a sessão, limpa cookies e redireciona para tela 
 			de login. -->

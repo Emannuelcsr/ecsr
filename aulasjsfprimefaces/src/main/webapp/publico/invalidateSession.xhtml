@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<!-- Cabeçalho da página -->
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+	<title><ui:insert name="titulo">ECSR</ui:insert></title>
+
+	<!-- Folhas de estilo (CSS) -->
+	<h:outputStylesheet name="primefaces.css" library="primefaces" />
+	<h:outputStylesheet name="jquery-ui.css" library="primefaces/jquery/ui" />
+	<h:outputStylesheet name="estilo.css" library="css" />
+
+	<!-- Scripts JavaScript usados no sistema -->
+	<h:outputScript name="jquery.js" library="primefaces/jquery" />
+	<h:outputScript name="primefaces.js" library="primefaces" />
+	<h:outputScript name="jquery-plugins.js" library="primefaces/jquery" />
+	<h:outputScript name="jquery.cookie.js" library="javascript" />
+	<h:outputScript name="jquery.maskMoney.min.js" library="javascript" />
+	<h:outputScript name="jquery.maskedinput.js" library="javascript" />
+	<h:outputScript name="scripty.js" library="javascript" />
+</h:head>
+
+<!-- Corpo da página -->
+<h:body>
+	<!-- Formulário principal sem prefixo de IDs -->
+	<h:form prependId="false">
+
+		<!-- Corrige conflitos de símbolos entre bibliotecas JS -->
+		<script type="text/javascript">
+			$.noConflict(); // Evita conflitos com outras bibliotecas que usam '$'
+		</script>
+
+		<!-- Área para exibir mensagens de validação/feedback -->
+		<div id="msgError" class="espacoMensagem">
+			<p:growl id="msg" showDetail="false" sticky="true" redisplay="true"
+				autoUpdate="true" life="500" />
+		</div>
+
+		<!-- Diálogo modal exibido ao encerrar sessão -->
+		<p:dialog header="Encerrar Sessão" widgetVar="dlg" resizable="false"
+			modal="true" closable="false">
+
+			<!-- Painel com os campos de login -->
+			<h:panelGrid columns="2" cellpadding="5">
+				<!-- Campo de login -->
+				<h:outputLabel for="username" value="login:" />
+				<p:inputText id="username" required="true" label="username"
+					requiredMessage="Informe o login" value="#{loginBeanView.username}" />
+
+				<!-- Campo de senha -->
+				<h:outputLabel for="password" value="senha:" />
+				<p:password id="password" required="true" label="password"
+					requiredMessage="Informe a senha" value="#{loginBeanView.password}"/>
+
+				<!-- Rodapé do diálogo com o botão de encerrar -->
+				<f:facet name="footer">
+					<p:commandButton value="Encerrar"
+						style="height:40px; width:100px; background-color:#cdcdc1; border:1px solid #FFFFF;"
+						update="msg" ajax="true"
+						oncomplete="handlerLoginRequest(xhr,status,args)" 
+						actionListener="#{loginBeanView.invalidar}"					
+						
+						/>
+				</f:facet>
+			</h:panelGrid>
+		</p:dialog>
+
+		<!-- Scripts relacionados ao funcionamento do diálogo -->
+		<script>
+			// Mostra o diálogo automaticamente ao carregar a página
+			$(function() {
+				PF('dlg').show(); // PF é a função global do PrimeFaces para acessar widgets
+			});
+			
+			// Função de callback executada após o botão "Encerrar" ser clicado
+			function handlerLoginRequest(xhr, status, args) {
+				// Se login falhou, balança o diálogo como feedback visual
+				if (!args.loggedIn) {
+					PF('dlg').jq.effect("shake", { times: 5 }, 100);
+				} else {
+					// Se login foi bem-sucedido, fecha o diálogo e chama a função de logout
+					PF('dlg').hide();
+					document.location = '#{request.contextPath}' +  "/j_spring_security_logout"
+					logout('#{request.contextPath}'); // Supondo que você tenha uma função logout definida em JavaScript
+				}
+			}
+		</script>
+	</h:form>
+</h:body>
+
+</html>

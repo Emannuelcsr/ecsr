@@ -2,21 +2,82 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:sec="http://www.springframework.org/security/tags"
-	xmlns:p="http://primefaces.org/ui">
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui">
 
 <h:head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+    <title><ui:insert name="titulo">ECSR</ui:insert></title>
 
+    <h:outputScript name="jquery.js" library="primefaces/jquery"></h:outputScript>
+    <h:outputStylesheet name="estilo.css" library="css" />
+    <h:outputScript name="scripy.js" library="javascript" />
 </h:head>
 
-
 <h:body>
+    <div id="imagemLogin">
+        <h:graphicImage library="img" name="logoECSR.png" styleClass="bordaImagem" />
+    </div>
 
-<h1>LOGINS</h1>
+    <div id="keysLogin">
+        <h:graphicImage library="img" name="keys.png" styleClass="bordaImagem" />
+    </div>
 
+    <div id="formLogin">
+        <br />
+        <h:panelGroup rendered="#{!empty param.login_error}">
+            <h:outputLabel
+                rendered="#{SPRING_SECURITY_LAST_EXCEPTION.message == 'Bad credentials'}">
+                <span class="estiloSpan">Permissão Negada, login ou senha incorretos.</span>
+            </h:outputLabel>
+
+            <h:outputLabel
+                rendered="#{SPRING_SECURITY_LAST_EXCEPTION.message == 'Maximum sessions of 1 for this principal exceeded'}">
+                <span class="estiloSpan">Você está logado em outra sessão.</span>
+                <!-- Corrigido para chamar a função corretamente -->
+                <h:commandButton value="Encerrar"
+                    style="height:40px;width:100px;background:#CDCDC1;border: 1px solid black;"
+                    onclick="invalidarSession('#{request.contextPath}', '/publico/invalidateSession'); return false;" />
+            </h:outputLabel>
+        </h:panelGroup>
+
+        <br />
+
+        <form id="formulario" method="post" onsubmit="return validarSenhaLogin();" name="formulario"
+            action="#{request.contextPath}/j_spring_security_check">
+            
+            <div style="text-align: right;">
+                <div style="padding-top: 2px;">
+                    <span style="display: inline-block; width: 50px; text-align: left;">Login</span>
+                    <input type="text" name="j_username" id="j_username" />
+                </div>
+                <div style="padding-top: 10px;">
+                    <span style="display: inline-block; width: 50px; text-align: left;">Senha</span>
+                    <input type="password" name="j_password" id="j_password" />
+                </div>
+                <div style="padding-top: 10px;">
+                    <button type="submit" class="blue" style="height: 40px; width: 100px; background-color: #CDCDC1; border: 1px solid black;" id="buttonLogin">Entrar</button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+    <script>
+        // Função para invalidar a sessão
+        function invalidarSession(context, pagina) {
+            // Exibe a URL para debug
+            console.log("Redirecionando para: " + context + pagina + ".jsf");
+            
+            // Redireciona para a URL para invalidar a sessão
+            document.location = context + pagina + ".jsf";
+        }
+
+        // Foca no campo de login ao carregar a página
+        $('#j_username').focus();
+    </script>
 </h:body>
 
 </html>
