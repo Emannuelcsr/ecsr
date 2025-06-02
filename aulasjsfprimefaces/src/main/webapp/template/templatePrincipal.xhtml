@@ -176,20 +176,23 @@
 
 				<!-- ***********************************************Menu popup suspenso*********************************************** -->
 
-				<div id="menupop">
+				<!-- Menu de opções do usuário -->
+				<div id="menupop" class="user-menu">
+
+					<!-- Link para enviar mensagem, visível apenas se o usuário tiver permissão -->
 					<sec:ifAnyGranted roles="MENSAGENS_ENVIAR_ACESSAR, ADMIN">
-						<p:commandLink actionListener="#{mensagemBeanView.novo}"
-							onsuccess="enviarMsgDialog.show();" value="Enviar mensagem"
-							immediate="true" style="display:block;" id="enviarMensagem"
-							ajax="true" process="@this" />
+						<p:commandLink id="enviarMensagem" value="Enviar Mensagem"
+							actionListener="#{mensagemBeanView.novo}"
+							onsuccess="enviarMsgDialog.show();" styleClass="menu-link"
+							immediate="true" ajax="true" process="@this" />
 					</sec:ifAnyGranted>
 
-					<a href="#" onclick="alterarSenhaDialog.show();"
-						style="display: block;" id="alterarSenha"> <span
-						id="spanAlterarSenha">Alterar Senha</span>
-					</a>
-				</div>
+					<!-- Link para abrir o diálogo de alteração de senha -->
+					<a href="#" id="alterarSenha" class="menu-link"
+						onclick="alterarSenhaDialog.show(); return false;"> Alterar
+						Senha </a>
 
+				</div>
 				<!-- ***********************************************Menu popup suspenso*********************************************** -->
 
 
@@ -200,11 +203,12 @@
 						style="width:185px; border: none; background:none; color:#000;">
 
 						<sec:ifAnyGranted roles="CADASTRO_ACESSAR, ADMIN">
-							
+
 							<p:submenu label="PESQUISA" id="subMenuPesquisa">
 								<sec:ifAnyGranted roles="CIDADE_ACESSAR,ADMIN">
 									<p:menuitem value="Cidade" id="menuCidadePesquisa"
-										action="#{cidadeBeanView.redirecionarFindEntidade}" immediate="true" />
+										action="#{cidadeBeanView.redirecionarFindEntidade}"
+										immediate="true" />
 								</sec:ifAnyGranted>
 							</p:submenu>
 
@@ -240,9 +244,11 @@
 			<!-- ***********************************************Diálogo de alteração de senha*********************************************** -->
 
 			<p:dialog widgetVar="alterarSenhaDialog" id="alterarSenhaDialog"
-				width="240px" modal="true" resizable="false" height="170px"
-				header="Alterar Senha" dynamic="true" appendToBody="false"
-				draggable="false">
+				header="Alterar Senha do Usuário" modal="true" resizable="false"
+				draggable="false" dynamic="true" appendTo="@(body)" width="400px"
+				height="auto" closable="true" closeOnEscape="true">
+
+				<ui:include src="/cadastro/dialog_alterar_senha.xhtml" />
 
 			</p:dialog>
 

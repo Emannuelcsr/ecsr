@@ -7,7 +7,16 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
 
-<ui:composition template="/template/templatePrincipal.xhtml"></ui:composition>
+<ui:composition template="/template/templatePrincipal.xhtml">
 
-<ui:define name="corpo"></ui:define>
+	<ui:define name="corpo">
+		<p:panel style="margin-top: 100px; width: 100%; text-align: center;"
+			header="Página Inicial">
+			<h:outputText value="Bem-vindo, " styleClass="texto-boas-vindas" />
+			<h:outputText value="#{entidadeBeanView.usuarioLogadoSecurity}"
+				styleClass="nome-usuario" />
+		</p:panel>
+	</ui:define>
+
+</ui:composition>
 </html>

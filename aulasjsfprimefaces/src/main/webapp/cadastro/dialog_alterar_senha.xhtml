@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:sec="http://www.springframework.org/security/facelets/tags"
+	xmlns:util="http://java.sun.com/jsf/composite/components"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+	<f:view>
+
+		<h:form id="formCadastroDialog" prependId="false">
+
+			<!-- Painel de alteração de senha -->
+			<p:panel style="max-width: 480px; margin: auto;">
+
+				<h:panelGrid columns="3" id="gridAltSenhaDialog"
+					columnClasses="labelCol,inputCol,messageCol" style="width:100%;">
+
+					<h:outputLabel value="Senha Atual:" for="senhaAtualDialog"
+						style="font-weight:bold;" />
+					<p:password id="senhaAtualDialog" maxlength="20" required="true"
+						requiredMessage="Informe o campo Senha Atual"
+						value="#{entidadeBeanView.entidadeAtualizaSenhaBean.senhaAtual}"
+						style="width:100%;" />
+					<p:message for="senhaAtualDialog" />
+
+					<h:outputLabel value="Nova Senha:" for="novaSenhaDialog"
+						style="font-weight:bold;" />
+					<p:password id="novaSenhaDialog" maxlength="20" required="true"
+						requiredMessage="Informe o campo da Nova Senha"
+						value="#{entidadeBeanView.entidadeAtualizaSenhaBean.novaSenha}"
+						style="width:100%;" />
+					<p:message for="novaSenhaDialog" />
+
+					<h:outputLabel value="Confirma Nova Senha:"
+						for="confirmaNovaSenhaDialog" style="font-weight:bold;" />
+					<p:password id="confirmaNovaSenhaDialog" maxlength="20"
+						required="true" requiredMessage="Confirme a Nova Senha"
+						value="#{entidadeBeanView.entidadeAtualizaSenhaBean.confirmaSenha}"
+						style="width:100%;" />
+					<p:message for="confirmaNovaSenhaDialog" />
+
+				</h:panelGrid>
+
+				<!-- Contêiner flexível para alinhar os botões -->
+				<div
+					style="display: flex; justify-content: space-between; margin-top: 10px;">
+
+					<!-- Botão de Fechar à esquerda -->
+					<p:commandButton value="Fechar" id="fecharSenhaDialog"
+						onclick="alterarSenhaDialog.hide();" />
+
+					<!-- Botão de Alterar Senha à direita -->
+					<p:commandButton value="Alterar Senha" immediate="false"
+						id="fecharAlterarSenhaDialog" partialSubmit="true" ajax="true"
+						action="#{entidadeBeanView.updateSenha}" process="@this, @form"
+						update="@form" icon="pi pi-check" oncomplete="alterarSenhaDialog.hide();" />
+				</div>
+
+			</p:panel>
+
+		</h:form>
+
+	</f:view>
+</h:body>
+
+</html>

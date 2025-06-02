@@ -131,7 +131,7 @@ public class ImplementacaoCrud<T> implements InterfaceCrud<T> {
 																			// método load do Hibernate.
 
 		validaSessionFactory();
-		Object obj = sessionFactory.getCurrentSession().load(getClass(), id);
+		Object obj = sessionFactory.getCurrentSession().load(entidade, id);
 
 		return obj;
 	}
@@ -140,7 +140,7 @@ public class ImplementacaoCrud<T> implements InterfaceCrud<T> {
 	@Override
 	public T findPorId(Class<T> entidade, Long id) throws Exception { // * Busca uma entidade por ID.
 		validaSessionFactory();
-		T obj = (T) sessionFactory.getCurrentSession().load(getClass(), id);
+		T obj = (T) sessionFactory.getCurrentSession().load(entidade, id);
 
 		return obj;
 	}
