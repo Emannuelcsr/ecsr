@@ -56,6 +56,17 @@ a:focus {
 	background-color: #F7F6F5;
 }
 
+#corpomenu {
+    position: absolute;
+    top: 120px; /* logo abaixo do topo */
+    left: 10px;
+    right: 10px;
+    bottom: 0;
+    overflow-y: auto; /* caso tenha rolagem */
+    
+}
+
+
 #menu {
 	position: absolute;
 	top: 80px;
@@ -66,25 +77,50 @@ a:focus {
 }
 
 #menupop {
-	position: absolute;
-	border: 1px solid #61cded;
-	top: 63px;
-	right: 25px;
-	height: 30px;
-	width: 150px;
-	background-color: white;
-	-webkit-border-bottom-right-radius: 5px;
-	-webkit-border-bottom-left-radius: 5px;
-	-moz-border-radius-bottomright: 5px;
-	-moz-border-radius-bottomleft: 5px;
-	border-bottom-right-radius: 5px;
-	border-bottom-left-radius: 5px;
-	padding: 2px
+    position: absolute;
+    top: 63px;
+    right: 25px;
+    width: 180px;
+    background-color: #ffffff;
+    border: 1px solid #61cded;
+    border-radius: 10px;
+    padding: 8px 0;
+    display: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 14px;
 }
 
-#menupop a:hover {
-	background-color: #e5e5e5;
+
+/* Estilo base da seta */
+.seta-menu {
+    transition: transform 0.3s ease; /* Animação suave de rotação */
 }
+
+/* Classe que será adicionada/removida via JS */
+.seta-menu.aberta {
+    transform: rotate(180deg); /* Gira 180 graus */
+}
+
+#menupop a,
+#menupop .ui-commandlink {
+    display: block;
+    padding: 10px 16px;
+    color: #333333;
+    text-decoration: none;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    border-radius: 6px;
+}
+
+#menupop a:hover,
+#menupop .ui-commandlink:hover {
+    background-color: #f0f8ff;
+    color: #007ad9;
+    font-weight: 500;
+    cursor: pointer;
+}
+
 
 #dialogo {
 	position: absolute;
@@ -223,20 +259,20 @@ a:focus {
 	padding-left: 5px;
 }
 
-#imagemlogin {
+#imagemLogin {
 	position: absolute;
 	top: 30px;
 	right: 60px;
 }
 
-#keyslogin {
+#keysLogin {
 	position: absolute;
 	bottom: 35px;
 	right: 240px;
 	z-index: 999;
 }
 
-#formlogin {
+#formLogin {
 	position: absolute;
 	bottom: 60px;
 	right: 60px;
@@ -252,32 +288,37 @@ a:focus {
 	padding-top: 30px;
 	padding-right: 20px;
 	padding-bottom: 10px;
+	background-color: #b9a67d;
 }
 
 #dadoslogin {
-	background: #61cded;
-	background-image: -moz-linear-gradient(rgba(255, 255, 255, .3),
-		rgba(255, 255, 255, 0) );
-	background-image: -webkit-linear-gradient(rgba(255, 255, 255, .3),
-		rgba(255, 255, 255, 0) );
-	background-image: -o-linear-gradient(rgba(255, 255, 255, .3),
-		rgba(255, 255, 255, 0) );
-	background-image: -ms-linear-gradient(rgba(255, 255, 255, .3),
-		rgba(255, 255, 255, 0) );
-	background-image: linear-gradient(rgba(255, 255, 255, .3),
-		rgba(255, 255, 255, 0) );
-	position: absolute;
-	right: 20px;
-	top: 14px;
-	width: 200px;
-	padding: 4px;
-	background-color: #61c0e0;
-	-webkit-border-radius: 8px;
-	-moz-border-radius: 8px;
-	border-radius: 8px;
-	-moz-box-shadow: 0 2px 0 rgba(0, 0, 0, .3);
-	-webkit-box-shadow: 0 2px 0 rgba(0, 0, 0, .3);
-	box-shadow: 0 2px 0 rgba(0, 0, 0, .3);
+    /* Posicionamento */
+    position: absolute;
+    right: 20px;
+    top: 14px;
+    width: 200px;
+    padding: 4px;
+    
+    /* Cores e gradientes */
+    background-color: #61c0e0;
+    background: #8c8680;
+    background-image: linear-gradient(
+        rgba(255, 255, 255, 0.3), 
+        rgba(255, 255, 255, 0)
+    );
+    
+    /* Bordas e sombras */
+    border-radius: 8px;
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.3);
+    
+    /* Efeitos visuais */
+    transition: all 0.3s ease;
+}
+
+/* Melhorias para hover (opcional) */
+#dadoslogin:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transform: translateY(-1px);
 }
 
 .ui-growl {

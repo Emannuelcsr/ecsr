@@ -63,6 +63,7 @@ public class SessioControllerImpl implements SessionController {
             try {
                 // Encerra a sessão do usuário
                 session.invalidate();
+                System.out.println("encerrou");
             } catch (Exception e) {
                 // Registra o erro, mas não impede a remoção do mapa
                 e.printStackTrace();

@@ -7,45 +7,70 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation utilizada para marcar campos de uma classe
- * que poderão ser usados em consultas/pesquisas dinâmicas.
+ * Annotation para marcar campos de uma entidade que poderão ser usados
+ * como parâmetros em consultas ou pesquisas dinâmicas no sistema.
  * 
- * Exemplo prático de uso:
+ * <p>
+ * Essa annotation serve para definir metadados importantes sobre cada campo,
+ * como uma descrição amigável para exibição na interface, o nome do campo
+ * correspondente na consulta (banco de dados) e a prioridade de exibição
+ * para ordenação em listas ou combos.
+ * </p>
  * 
- * {@code
- * @IdentificaCampoPesquisa(descricaoCampo = "Nome do Cliente", campoConsulta = "nome", principal = 1)
+ * <h3>Exemplo de uso:</h3>
+ * <pre>
+ * &#64;IdentificaCampoPesquisa(
+ *     descricaoCampo = "Nome do Cliente",
+ *     campoConsulta = "nome",
+ *     principal = 1
+ * )
  * private String nome;
- * }
+ * </pre>
  * 
- * Essa anotação permite informar:
- * - Descrição amigável para exibir na tela
- * - Campo do banco de dados que será consultado
- * - Ordem de prioridade na exibição (menor valor aparece primeiro)
+ * <p>
+ * Com essa annotation, frameworks ou códigos customizados podem refletir
+ * sobre os campos da classe e montar filtros, consultas e interfaces
+ * dinamicamente, reduzindo a necessidade de codificação repetitiva.
+ * </p>
+ * 
+ * <h3>Detalhes da Annotation:</h3>
+ * <ul>
+ *   <li><b>@Target(ElementType.FIELD)</b>: só pode ser usada em campos (atributos)</li>
+ *   <li><b>@Retention(RetentionPolicy.RUNTIME)</b>: estará disponível em tempo de execução para reflexão</li>
+ *   <li><b>@Documented</b>: será documentada no JavaDoc gerado</li>
+ * </ul>
+ * 
+ * 
+ * 
  */
+@Target(value = ElementType.FIELD) // Onde pode ser aplicada (campo/atributo)
+@Retention(value = RetentionPolicy.RUNTIME) // Quando estará disponível (em tempo de execução)
+@Documented // Para documentar a annotation no JavaDoc
+public @interface IdentificaCampoPesquisa {
 
-@Target(value = ElementType.FIELD)
-@Retention(value = RetentionPolicy.RUNTIME)
-@Documented
-public abstract @interface IdentificaCampoPesquisa {
+    /**
+     * Descrição amigável do campo para exibição em telas e relatórios.
+     * Exemplo: "Nome do Cliente"
+     * 
+     * @return String com a descrição do campo
+     */
+    String descricaoCampo();
 
-	/**
-	 * Descrição amigável do campo que será exibida na tela.
-	 * Exemplo: "Nome do Cliente"
-	 */
-	String descricaoCampo(); //descricao do campo para tela
-	
-	/**
-	 * Nome do campo correspondente no banco de dados
-	 * Exemplo: "nome"
-	 */
-	String campoConsulta(); // campo do banco
-	
-	/**
-	 * Define a ordem de exibição no combo/lista de pesquisa.
-	 * Quanto menor o número, maior a prioridade de exibição.
-	 * Valor padrão: 10000 (aparece por último caso não informado)
-	 */
-	int principal() default 10000; //posicao que ira aparecer no combo
-	
-	
+    /**
+     * Nome do campo correspondente na consulta ou banco de dados.
+     * Exemplo: "nome", "cliente.nome", "cid_codigo"
+     * 
+     * @return String com o nome do campo para consulta
+     */
+    String campoConsulta();
+
+    /**
+     * Prioridade para ordenação na exibição dos campos.
+     * Quanto menor o valor, maior a prioridade (aparece primeiro).
+     * Valor padrão é 10000 para campos sem prioridade definida.
+     * 
+     * @return int com a prioridade do campo (default 10000)
+     */
+    int principal() default 10000;
+
 }

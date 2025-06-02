@@ -1,0 +1,149 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:sec="http://www.springframework.org/security/facelets/tags"
+	xmlns:util="http://java.sun.com/jsf/composite/components"
+	xmlns:cc="http://java.sun.com/jsf/composite"
+	xmlns:p="http://primefaces.org/ui">
+
+
+
+<h:form id="formPesquisa" prependId="false">
+
+	<cc:interface displayName="interfacePesquisa" name="interfacePesquisa">
+		<cc:attribute name="managedBeanView" required="true" />
+		<cc:attribute name="ocultaNovo" required="true" />
+		<cc:attribute name="menuImpressao" required="false" default="false" />
+		<cc:attribute name="novoPesquisa" required="true" default="true" />
+		<cc:attribute name="colunasGridDataTableList" required="true" />
+	</cc:interface>
+
+	<cc:implementation>
+		<c:set var="isCadastro" value="false" scope="view" />
+
+		<h:panelGrid columns="2">
+
+			<h:column rendered="#{cc.attrs.ocultaNovo}">
+				<p:commandButton value="Novo" id="buttonNovoRegistro"
+					style="height:40px; width:100px; background:#CDCDC1; border:1px solid #FFFFFF;"
+					ajax="false" immediate="true"
+					action="#{cc.attrs.managedBeanView.novo}" />
+			</h:column>
+
+			<h:column rendered="#{cc.attrs.menuImpressao}">
+				<util:menuImpressao bean="#{cc.attrs.managedBeanView}" />
+			</h:column>
+
+		</h:panelGrid>
+
+		<p:spacer height="20px" />
+
+		<p:panel id="painelPesquisa" header="#{cc.attrs.novoPesquisa}">
+
+			<h:panelGrid id="panelGridPesquisa" columns="7">
+
+				<h:outputLabel for="campo" id="labelCampo" value="Campo: " />
+
+				<p:selectOneMenu style="width:150px" id="campo"
+					onchange="addMascaraPesquisa(this.value);"
+					value="#{cc.attrs.managedBeanView.objetoCampoConsultaSelecionado}">
+
+					<f:selectItems var="campoPesquisaSelecionado"
+						id="itensCampoPesquisa"
+						itemLabel="#{campoPesquisaSelecionado.descricao}"
+						itemValue="#{campoPesquisaSelecionado.tipoClass}"
+						value="#{cc.attrs.managedBeanView.listaCampoPesquisa}"></f:selectItems>
+
+				</p:selectOneMenu>
+
+				<h:outputLabel for="condicao" id="labelCondicao" value="Onde: " />
+				<p:selectOneMenu id="condicao" style="width:150px"
+					value="#{cc.attrs.managedBeanView.condicaoPesquisaSelecionado}">
+
+					<f:selectItems id="itensCondicao"
+						value="#{cc.attrs.managedBeanView.listaCondicaoPesquisa}"></f:selectItems>
+
+
+				</p:selectOneMenu>
+
+				<p:inputText id="valorPesquisa" immediate="false"
+					onblur="validarCampoPesquisa(event);" maxlength="65"
+					onkeypress="executaPesquisaComEnter(event, this)"
+					value="#{cc.attrs.managedBeanView.valorPesquisa}" />
+
+				<p:commandButton id="buttomPesquisar" partialSubmit="false"
+					value="Filtrar" ajax="true" process="@this, panelGridPesquisa"
+					actionListener="#{cc.attrs.managedBeanView.consultarEntidade}"
+					onsuccess="addFocoCampo('valorPesquisa')"
+					oncomplete="addFocoCampo('valorPesquisa')"
+					update=":formTemplate:msg, tableResult">
+
+
+
+				</p:commandButton>
+
+			</h:panelGrid>
+		</p:panel>
+
+
+
+		<p:spacer />
+
+
+		<p:dataTable id="tableResult" rendered="true"
+			value="#{cc.attrs.managedBeanView.list}" var="objeto" rows="10"
+			widgetVar="tableResult" paginatorPosition="bottom" lazy="true"
+			selectionMode="single"
+			selection="#{cc.attrs.managedBeanView.objetoSelecionado}"
+			rowKey="#{objeto}" rowIndexVar="index" paginator="true"
+			rowsPerPageTemplate="5,10,20" emptyMessage="Não possui registros">
+
+			<p:ajax event="rowSelect" global="false"
+				listener="#{cc.attrs.managedBeanView.onRowSelect}" />
+
+			<ui:include src="#{cc.attrs.colunasGridDataTableList}" />
+
+
+		</p:dataTable>
+
+
+
+
+		<script type="text/javascript" charset="UTF-8">
+			var idCampo = getValorElementPorIdJQuery('campo');
+			var idCampoCondicao = getValorElementPorIdJQuery('condicao');
+			var idPesquisa = getValorElementPorIdJQuery('valorPesquisa');
+
+			$(idPesquisa).keypress(permitNumber);
+
+			$(idCampo + ' :nth-child(1)').prop('selected', true);
+			$(idCampoCondicao + ' :nth-child(1)').prop('selected', true);
+			$(idPesquisa).val('');
+
+			addMascaraPesquisa($(idCampo).val());
+
+			addFocoCampo('valorPesquisa');
+
+			function executaPesquisaComEnter(event, button) {
+				if (event.key === "Enter") {
+
+					event.preventDefault();
+					addFocoCampo('buttomPesquisar');
+
+					var buttonPesquisar = getValorElementPorIdJQuery('buttomPesquisar');
+					$(buttonPesquisar).click();
+				}
+			}
+		</script>
+
+
+	</cc:implementation>
+
+
+</h:form>
+
+
+
+</html>

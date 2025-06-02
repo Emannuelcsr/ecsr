@@ -1,0 +1,122 @@
+<!-- 
+  Composite Component que encapsula componentes para reuso em formulários.
+  Permite configurar visibilidade e ação dos botões dinamicamente com base em atributos passados.
+-->
+
+<ui:component xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:sec="http://www.springframework.org/security/facelets/tags"
+	xmlns:util="http://java.sun.com/jsf/composite/components"
+	xmlns:cc="http://java.sun.com/jsf/composite"
+	xmlns:p="http://primefaces.org/ui">
+
+	<!-- 
+		Definição da interface do componente.
+		Cada atributo é uma "entrada configurável" que pode ser definida ao usar o componente.
+	-->
+	<cc:interface name="botoesCrud">
+
+		<!-- 
+			Bean que deve conter os métodos chamados pelos botões (ex: novo(), saveNotReturn()).
+			Obrigatório (required="true").
+		-->
+		<cc:attribute name="managedBeanView" required="true" default="" />
+
+		<!-- Controla se o botão "Novo" será exibido. Padrão: true -->
+		<cc:attribute name="botaoNovo" required="false" default="true" />
+
+		<!-- Controla se o botão "Salvar" será exibido. Padrão: true -->
+		<cc:attribute name="botaoSalvar" required="false" default="true" />
+
+		<!-- Controla se o botão "Atualizar" será exibido. Padrão: true -->
+		<cc:attribute name="botaoAtualizar" required="false" default="true" />
+
+		<!-- Controla se o botão "Atualizar" será exibido. Padrão: true -->
+		<cc:attribute name="botaoExcluir" required="false" default="true" />
+
+		<!-- 
+			Define os componentes que devem ser atualizados via AJAX após a ação do botão.
+			Utilizado nos atributos update="#{cc.attrs.camposReload}".
+		-->
+		<cc:attribute name="camposReload" required="false" />
+
+	</cc:interface>
+
+	<!-- Implementação visual do componente -->
+	<cc:implementation>
+
+		<!-- 
+			Botão "Novo"
+			- Só aparece se botaoNovo for true.
+			- Chama o método novo() do managedBeanView.
+			- Atualiza os componentes definidos em camposReload.
+		-->
+		<p:commandButton value="Novo" rendered="#{cc.attrs.botaoNovo}"
+			action="#{cc.attrs.managedBeanView.novo}"
+			style="height:40px; width:100px; background:#CDCDC1; border:1px solid #FFFFFF;"
+			ajax="false" immediate="true" id="buttonNovo"
+			update="#{cc.attrs.camposReload}" />
+
+		<!--
+    value="Salvar" 
+    ▶ Texto exibido no botão.
+
+    rendered="#{cc.attrs.botaoSalvar}" 
+    ▶ Define se o botão será renderizado (visível) ou não. Baseado em permissão ou lógica de exibição.
+
+    actionListener="#{cc.attrs.managedBeanView.saveNotReturn}" 
+    ▶ Método que será executado no bean ao clicar no botão (usando ActionListener).
+
+    style="..." 
+    ▶ Estilização visual do botão (altura, largura, cor de fundo, borda, etc.).
+
+    ajax="false" 
+    ▶ Define que o botão não usa AJAX. A requisição será completa (full submit).
+
+    partialSubmit="true" 
+    ▶ Envia apenas os campos processados definidos no `process`, otimizando a submissão.
+
+    process="@this, @form" 
+    ▶ Define os componentes JSF que serão processados (validados e atualizados no bean).
+    ▶ @this = o próprio botão | @form = todos os campos do formulário atual.
+
+    immediate="false" 
+    ▶ Define se a ação será executada na fase de “Apply Request Values” (true) ou na fase de “Invoke Application” (false).
+    ▶ False garante que a validação e atualização do modelo ocorram antes da execução da lógica.
+
+    id="buttonSalvar" 
+    ▶ Identificador único do botão na página.
+
+    update="#{cc.attrs.camposReload}" 
+    ▶ Define quais componentes da tela serão atualizados após o clique (refresh via AJAX ou submit).
+-->
+		<p:commandButton value="Salvar" rendered="#{cc.attrs.botaoSalvar}"
+			actionListener="#{cc.attrs.managedBeanView.saveNotReturn}"
+			style="height:40px; width:100px; background:#CDCDC1; border:1px solid #FFFFFF;"
+			ajax="false" partialSubmit="true" process="@this, @form"
+			immediate="false" id="buttonSalvar" update="#{cc.attrs.camposReload}" />
+
+		<p:commandButton value="Atualizar"
+			rendered="#{cc.attrs.botaoAtualizar}"
+			actionListener="#{cc.attrs.managedBeanView.saveEdit}"
+			style="height:40px; width:100px; background:#CDCDC1; border:1px solid #FFFFFF;"
+			ajax="false" partialSubmit="true" process="@this, @form"
+			immediate="false" id="buttonAtualizar"
+			update="#{cc.attrs.camposReload}" />
+
+		<p:commandButton value="Excluir"
+			rendered="#{cc.attrs.botaoExcluir}"
+			actionListener="#{cc.attrs.managedBeanView.excluir}"
+			style="height:40px; width:100px; background:#CDCDC1; border:1px solid #FFFFFF;"
+			ajax="false" partialSubmit="true" process="@this, @form"
+			immediate="false" id="buttonExcluir"
+			update="#{cc.attrs.camposReload}" />
+
+
+
+	</cc:implementation>
+
+</ui:component>

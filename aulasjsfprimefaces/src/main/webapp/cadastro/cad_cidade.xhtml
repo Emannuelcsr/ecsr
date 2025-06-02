@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:sec="http://www.springframework.org/security/facelets/tags"
+	xmlns:util="http://java.sun.com/jsf/composite/components"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/template/templatePrincipal.xhtml">
+
+	<ui:define name="corpo">
+
+
+
+
+		<h:form id="formCadastro" prependId="false">
+			<c:set var="isCadastro" value="false" scope="view" />
+			<p:panel header="Cadastro de Cidade" id="painelCadastro"
+				styleClass="painelCadastro">
+				<h:panelGrid id="gridCidade" columns="3">
+
+					<h:outputLabel for="id" value="Código: " id="labelId" />
+					<p:inputText id="id" styleClass="estiloIdCastro" disabled="true"
+						value="#{cidadeBeanView.objetoSelecionado.cid_codigo}" />
+					<h:outputLabel />
+
+					<h:outputLabel id="labelNomeConsultaCidade" for="cidadeNome"
+						value="Nome * :" />
+					<p:inputText id="cidadeNome" styleClass="estyleInputName"
+						required="true" maxlength="100"
+						requiredMessage="Informe o nome da cidade"
+						value="#{cidadeBeanView.objetoSelecionado.cid_descricao}" />
+
+					<p:message for="cidadeNome" />
+
+					<h:outputLabel for="estado" id="labelEstado" value="Estado *:" />
+					<p:selectOneMenu id="estado" required="true" style="width:200px"
+						requiredMessage="Informe o estado."
+						value="#{cidadeBeanView.objetoSelecionado.estado}">
+						<f:selectItems value="#{estadoBeanView.estados}" />
+					</p:selectOneMenu>
+					<p:message for="estado"></p:message>
+
+				</h:panelGrid>
+			</p:panel>
+
+			<div class="espacoBranco" />
+
+
+			<!--
+    managedBeanView="#{cidadeBeanView}" 
+    ▶ Referência ao ManagedBean da tela. Usado para chamar métodos como `novo()` e `saveNotReturn()` 
+    ▶ Espera-se que esse bean implemente os métodos padrão do CRUD.
+
+    camposReload=":formTemplate:msg, tableResult" 
+    ▶ Componentes que serão atualizados após as ações dos botões (como salvar ou novo).
+    ▶ `:formTemplate:msg` = componente de mensagens (feedback ao usuário)
+    ▶ `tableResult` = tabela que exibe os registros
+
+    botaoNovo="#{contextoBean.possuiAcesso('CIDADE_NOVO','ADMIN')}" 
+    ▶ Define se o botão "Novo" será exibido com base nas permissões do usuário.
+    ▶ Chama o método `possuiAcesso(...)` que verifica se o usuário logado tem os acessos indicados.
+
+    botaoSalvar="#{contextoBean.possuiAcesso('CIDADE_NOVO','ADMIN')}" 
+    ▶ Define se o botão "Salvar" será exibido, com a mesma lógica de controle de acesso.
+-->
+			<util:botoesCrud managedBeanView="#{cidadeBeanView}"
+				camposReload=":formTemplate:msg, tableResult"
+				botaoNovo="#{contextoBean.possuiAcesso('CIDADE_NOVO','ADMIN')}"
+				botaoSalvar="#{contextoBean.possuiAcesso('CIDADE_NOVO','ADMIN') and cidadeBeanView.objetoSelecionado.cid_codigo == null }"
+				botaoAtualizar="#{contextoBean.possuiAcesso('ACESSO_EDITAR','ADMIN') and cidadeBeanView.objetoSelecionado.cid_codigo != null }" />
+
+
+
+			<div class="espacoBranco" />
+
+		</h:form>
+
+
+		<script type="text/javascript">
+			window.onload = function() {
+				addFocoCampo("cidadeNome");
+			};
+
+			gerenciaTeclaEnter();
+		</script>
+
+			<p:dataTable id="tableResult" value="#{cidadeBeanView.list.list}"
+				var="objeto" emptyMessage="Não existem valores para exibição"
+				rendered="#{cidadeBeanView.list.list.size() > 0}" rows="5"
+				paginator="true" 
+				paginatorPosition="bottom">
+
+				<ui:include src="/resources/components/colunasDataTableCidade.xhtml" />
+
+
+			</p:dataTable>
+
+	</ui:define>
+
+</ui:composition>
+
+
+
+</html>

@@ -1,9 +1,13 @@
 package br.com.project.model.classes;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.hibernate.envers.Audited;
 
@@ -23,6 +27,7 @@ import org.hibernate.envers.Audited;
 //----------------------------------------------------------------------------------------------------------------------------------------
 @Audited
 @Entity
+@Table(name = "entidade", schema = "public")
 public class Entidade implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -55,12 +60,19 @@ public class Entidade implements Serializable {
 	
 	private boolean ent_inativo = false;
 	
-	
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date ent_ultimoacesso;
 	
 
 //------------------------ Getters e Setters------------------------------------------------------------------------------------------------
 
+	public void setEnt_ultimoacesso(Date ent_ultimoacesso) {
+		this.ent_ultimoacesso = ent_ultimoacesso;
+	}
 	
+	public Date getEnt_ultimoacesso() {
+		return ent_ultimoacesso;
+	}
 	
 	
 	/**

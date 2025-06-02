@@ -20,7 +20,7 @@ public enum Permissao {
 //--------------------------------------------------------------------------------------------------------------------------------------//
 
 	// Enumeração das permissões do sistema
-	ADMIN("Admin", "Administrador"),
+	ADMIN("ADMIN", "Administrador"),
 	USER("USER", "Usuário Padrão"),
 	CADASTRO_ACESSAR("CADASTRO_ACESSAR", "Cadastro - Acessar"),
 	FINANCEIRO_ACESSAR("FINANCEIRO_ACESSAR", "Financeiro - Acessar"),

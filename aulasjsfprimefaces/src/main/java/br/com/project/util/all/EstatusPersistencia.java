@@ -15,7 +15,7 @@ package br.com.project.util.all;
  * 
  * <p>Cada constante da enum possui uma descrição personalizada.</p>
  * 
- * @author Emannuel Souza
+ *]
  */
 
 //--------------------------------------------------------------------------------------------------------------------------------------------

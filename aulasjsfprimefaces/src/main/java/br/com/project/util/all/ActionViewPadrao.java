@@ -26,7 +26,7 @@ public interface ActionViewPadrao extends Serializable {
 	
 	
 	
-    void limparLista() throws Exception;
+     void limparLista() throws Exception;
 
     /**
      * Salva a entidade e retorna para a mesma view ou outra view definida.

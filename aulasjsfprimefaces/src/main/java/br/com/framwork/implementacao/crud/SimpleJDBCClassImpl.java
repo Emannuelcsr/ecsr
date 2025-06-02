@@ -27,4 +27,7 @@ public class SimpleJDBCClassImpl extends SimpleJdbcCall implements Serializable 
 	public SimpleJDBCClassImpl(DataSource dataSource) {
 		super(dataSource);
 	}
+	
+	
+	
 }

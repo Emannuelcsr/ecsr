@@ -48,7 +48,7 @@ public abstract class BeanReportView extends BeanViewAbstract {
 	protected HashMap<Object, Object> parametrosRelatorio;
 
 	/** Nome do arquivo .jasper a ser utilizado como template. */
-	protected String nomeRelatorioJasper = "dafault"; // (sic)
+	protected String nomeRelatorioJasper = "default"; // 
 
 	/** Nome do arquivo de saída gerado para o usuário. */
 	protected String nomeRelatorioSaida = "default";
@@ -106,14 +106,19 @@ public abstract class BeanReportView extends BeanViewAbstract {
 	 * @return objeto {@link StreamedContent} contendo o relatório gerado
 	 * @throws Exception caso ocorra erro na geração
 	 */
-	public StreamedContent getArquivoReport() throws Exception {
-		return getReportUtil().geraRelatorio(
-			getListDataBeanCollectionReport(),
-			getParametrosRelatorio(),
-			getNomeRelatorioJasper(),
-			getNomeRelatorioSaida(),
-			getTipoRelatorio()
-		);
+	public StreamedContent getArquivoReport() {
+		try {
+			return getReportUtil().geraRelatorio(
+				getListDataBeanCollectionReport(),
+				getParametrosRelatorio(),
+				getNomeRelatorioJasper(),
+				getNomeRelatorioSaida(),
+				getTipoRelatorio()
+			);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
 	

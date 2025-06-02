@@ -47,12 +47,17 @@ public class ViewScope implements Scope, Serializable {
 //-----------------------------------------------------------------------------------------------------------------------------------
 
 	/**
-	 * Recupera um bean do ViewScope. Caso não exista, cria uma nova instância
-	 * utilizando o ObjectFactory e armazena no ViewMap.
-	 *
-	 * @param name nome do bean
-	 * @param objectFactory fábrica responsável por criar a instância do bean
-	 * @return o bean instanciado ou recuperado do ViewMap
+	 * Recupera um bean do escopo de view (ViewScope) usando seu nome.
+	 * 
+	 * - Se o bean já estiver armazenado no ViewMap da página atual, ele é retornado.
+	 * - Caso contrário, cria uma nova instância do bean utilizando a fábrica (ObjectFactory),
+	 *   armazena essa instância no ViewMap e retorna ela.
+	 * 
+	 * Esse método garante que o bean viva enquanto o usuário estiver na mesma página.
+	 * 
+	 * @param name nome do bean que se deseja obter
+	 * @param objectFactory fábrica responsável por criar o bean, caso não exista
+	 * @return a instância do bean (recuperada ou criada)
 	 */
 	
 	
@@ -60,13 +65,24 @@ public class ViewScope implements Scope, Serializable {
 	
 	@Override
 	public Object get(String name, ObjectFactory<?> objectFactory) {
-		Object instance = getViewMap().get(name);		
-		if (instance == null) {
-			instance = objectFactory.getObject();
-			getViewMap().put(name, instance);
-		}
-		return instance;
+	    
+	    // Tenta recuperar do ViewMap um objeto (bean) pelo nome fornecido
+	    Object instance = getViewMap().get(name);
+	    
+	    // Se não encontrar o bean no ViewMap (ou seja, ainda não foi criado)
+	    if (instance == null) {
+	        
+	        // Usa a fábrica para criar uma nova instância do bean
+	        instance = objectFactory.getObject();
+	        
+	        // Armazena essa nova instância no ViewMap, associando ao nome do bean
+	        getViewMap().put(name, instance);
+	    }
+	    
+	    // Retorna a instância do bean (recuperada ou criada)
+	    return instance;
 	}
+
 
 	
 //-----------------------------------------------------------------------------------------------------------------------------------
@@ -153,8 +169,8 @@ public class ViewScope implements Scope, Serializable {
 	 * @return mapa contendo os objetos armazenados na view atual
 	 */
 	private Map<String, Object> getViewMap() {
-		return FacesContext.getCurrentInstance() != null 
+		return (Map<String, Object>) (FacesContext.getCurrentInstance() != null 
 				? FacesContext.getCurrentInstance().getViewRoot().getViewMap() 
-				: new HashMap<>();
+				: new HashMap<>());
 	}
 }

@@ -3,7 +3,8 @@ package br.com.project.util.all;
 import org.springframework.stereotype.Component;
 
 /**
- * Classe abstrata que implementa a interface {@link ActionViewPadrao}, fornecendo implementações padrão (vazias ou genéricas) para os métodos comuns de CRUD.
+ * Classe abstrata que implementa a interface {@link ActionViewPadrao}, 
+ * fornecendo implementações padrão (vazias ou genéricas) para os métodos comuns de CRUD.
  * <p>
  * Esta classe serve como base para beans de visão (como {@code @ManagedBean} ou {@code @Component}) em aplicações Java Web com Spring + JSF.
  * </p>

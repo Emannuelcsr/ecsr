@@ -48,10 +48,17 @@ public class HibernateUtil implements Serializable {
 //--------------------------------------------------------------------------------------------------------------------------
 	
 	/**
-	 * Método responsável por criar o SessionFactory a partir do arquivo 
-	 * de configuração hibernate.cfg.xml.
-	 * 
-	 * @return SessionFactory
+	 * Constrói a instância única de {@link SessionFactory} com base nas configurações
+	 * definidas no arquivo hibernate.cfg.xml.
+	 *
+	 * <p>Esse método segue o padrão Singleton para garantir que apenas uma instância
+	 * de SessionFactory seja criada durante o ciclo de vida da aplicação.</p>
+	 *
+	 * <p>Utiliza a API do Hibernate para carregar a configuração padrão e instanciar
+	 * a fábrica de sessões que será usada para gerar objetos {@link org.hibernate.Session}.</p>
+	 *
+	 * @return Instância da SessionFactory configurada
+	 * @throws ExceptionInInitializerError se houver falha na configuração
 	 */
 	private static SessionFactory buildSessionFactory() {
 
@@ -89,9 +96,15 @@ public class HibernateUtil implements Serializable {
 	
 	
 	/**
-	 * Retorna a sessão corrente do Hibernate (session bound to context).
-	 * 
-	 * @return Session
+	 * Retorna a sessão atual do Hibernate vinculada ao contexto da thread.
+	 *
+	 * <p>Essa sessão é automaticamente gerenciada pelo Hibernate,
+	 * sendo aberta e fechada de acordo com o ciclo de vida da transação atual.</p>
+	 *
+	 * <p>Requer configuração no hibernate.cfg.xml:
+	 * <code>hibernate.current_session_context_class</code> deve estar definido como <code>thread</code>.</p>
+	 *
+	 * @return Sessão corrente do Hibernate associada à thread
 	 */
 	public static Session getCurrentSession() {
 
@@ -104,9 +117,14 @@ public class HibernateUtil implements Serializable {
 
 	
 	/**
-	 * Abre uma nova sessão do Hibernate.
+	 * Abre uma nova instância de Session (sessão independente) do Hibernate.
 	 * 
-	 * @return Session
+	 * <p>Essa sessão não está vinculada ao contexto da thread atual. Portanto,
+	 * deve ser fechada manualmente após o uso para evitar vazamento de conexões.</p>
+	 * 
+	 * <p>Se o SessionFactory ainda não tiver sido criado, este método irá inicializá-lo.</p>
+	 *
+	 * @return Uma nova instância de Session do Hibernate
 	 */
 	public static Session openSession() {
 		
@@ -124,11 +142,25 @@ public class HibernateUtil implements Serializable {
 	
 	
 	/**
-	 * Obtém a conexão JDBC diretamente do provedor de conexões 
-	 * do Hibernate configurado.
+	 * Obtém uma conexão JDBC diretamente do provedor de conexões do Hibernate.
 	 * 
-	 * @return Connection JDBC
-	 * @throws SQLException Caso ocorra erro na conexão
+	 * Este método acessa o provedor de conexões configurado no Hibernate (geralmente o Hibernate Connection Pool 
+	 * ou um pool configurado externamente, como o C3P0 ou DBCP)
+	 * e retorna uma conexão JDBC que pode ser utilizada para executar operações diretamente no banco de dados.
+	 * 
+	 * **Uso recomendado**: Este método é útil quando você precisa de uma conexão JDBC direta, fora do contexto do Hibernate, 
+	 * mas ainda deseja utilizar o provedor de conexões configurado no Hibernate. 
+	 * Se você estiver utilizando o Hibernate para gerenciamento de transações e sessões, 
+	 * é mais recomendável obter uma `Session` ao invés de uma conexão direta.
+	 * 
+	 * **Exemplo de uso**:
+	 * <pre>
+	 * Connection connection = HibernateUtil.getConnectionProvider();
+	 * // Utilizar a conexão diretamente para executar operações JDBC
+	 * </pre>
+	 * 
+	 * @return Connection Um objeto {@link Connection} que representa a conexão JDBC com o banco de dados configurado no Hibernate.
+	 * @throws SQLException Caso ocorra um erro ao tentar obter a conexão do provedor de conexões.
 	 */
 	public static Connection getConnectionProvider() throws SQLException{
 		
@@ -159,10 +191,13 @@ public class HibernateUtil implements Serializable {
 //--------------------------------------------------------------------------------------------------------------------------	
 	
 	/**
-	 * Retorna o DataSource configurado no Tomcat via JNDI.
+	 * Realiza o lookup do DataSource registrado no servidor de aplicação (Tomcat)
+	 * via JNDI, conforme definido no arquivo context.xml.
 	 * 
-	 * @return DataSource JNDI
-	 * @throws NamingException Caso ocorra erro no lookup do JNDI
+	 * Esse DataSource permite conexões diretas com o banco de dados usando JDBC.
+	 * 
+	 * @return DataSource configurado via JNDI
+	 * @throws NamingException se o recurso JNDI não for encontrado ou houver erro de acesso
 	 */
 	public DataSource getDataSourceJndi() throws NamingException{
 		

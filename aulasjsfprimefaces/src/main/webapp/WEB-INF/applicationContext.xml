@@ -92,7 +92,8 @@
 		<property name="sqlMigrationPrefix" value="v" />
 		<property name="sqlMigrationSeparator" value="_" />
 		<property name="encoding" value="ISO-8859-1" />
-		<property name="validateOnMigrate" value="true" />
+		<property name="validateOnMigrate" value="true" />		
+		<property name="locations" value="classpath:db/migration"/>
 	</bean>
 
 
@@ -235,5 +236,6 @@
 
 	<bean id="srvLogin" class="br.com.srv.implementacao.SrvLoginImpl" />
 
+	<bean id="controller" name="controller" class="br.com.framework.controller.crud.Controller"/>
 
 </beans>

@@ -11,7 +11,7 @@ import java.io.Serializable;
  * 
  * <p>Esta classe não deve ser instanciada.</p>
  * 
- * @author Emannuel Souza
+ * 
  */
 public class Constante implements Serializable {
 

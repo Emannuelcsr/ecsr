@@ -20,7 +20,7 @@ import javax.faces.context.FacesContext;
  * 
  * <p>As mensagens são enviadas para o componente de ID "msg" da página JSF.</p>
  * 
- * @author Emannuel Souza
+ * 
  */
 
 
