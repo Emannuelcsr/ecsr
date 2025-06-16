@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:sec="http://www.springframework.org/security/facelets/tags"
+	xmlns:util="http://java.sun.com/jsf/composite/components"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/template/templatePrincipal.xhtml">
+
+	<ui:define name="corpo">
+
+		<h:form id="formCadastro" prependId="false">
+
+			<p:panel header="Cadastro de Funcionários"
+				id="panelCadastroFuncionario">
+
+				<p:panelGrid id="gridFuncionario" columns="3">
+					<p:column>
+						<p:row>
+							<h:outputLabel for="id" value="Código: " id="labelID" />
+						</p:row>
+					</p:column>
+
+					<p:column>
+						<p:row>
+							<p:inputText readonly="true" id="id"
+								value="#{funcionarioBeanView.objetoSelecionado.ent_codigo}" />
+						</p:row>
+					</p:column>
+
+					<p:column>
+						<p:row>
+
+						</p:row>
+					</p:column>
+
+
+					<p:column>
+						<p:row>
+							<h:outputLabel for="ent_nomefantasia" value="Nome: "
+								id="labelNome" />
+						</p:row>
+					</p:column>
+
+					<p:column>
+						<p:row>
+							<p:inputText id="ent_nomefantasia" required="true"
+								requiredMessage="Informe o nome" maxlength="50"
+								style="width:350px"
+								value="#{funcionarioBeanView.objetoSelecionado.ent_nomefantasia}" />
+						</p:row>
+					</p:column>
+
+					<p:column>
+						<p:row>
+							<p:message for="ent_nomefantasia" />
+						</p:row>
+					</p:column>
+
+
+
+					<p:column>
+						<p:row>
+							<h:outputLabel for="cpf" value="Cpf: "
+								id="labelCpf" />
+						</p:row>
+					</p:column>
+
+					<p:column>
+						<p:row>
+							<p:inputMask id="cpf" required="true" mask="999.999.999-99"
+								requiredMessage="Informe o cpf" maxlength="11"
+								style="width:350px"
+								value="#{funcionarioBeanView.objetoSelecionado.cpf}" />
+						</p:row>
+					</p:column>
+
+					<p:column>
+						<p:row>
+							<p:message for="cpf" />
+						</p:row>
+					</p:column>
+
+
+
+
+
+
+					<p:column>
+						<p:row>
+							<h:outputLabel for="tipoEntidade" value="Cargo: " id="labelCargo" />
+						</p:row>
+					</p:column>
+
+					<p:column>
+						<p:row>
+							<p:selectOneMenu id="tipoEntidade" required="true"
+								requiredMessage="Informe o Cargo"
+								value="#{funcionarioBeanView.objetoSelecionado.tipoEntidade}">
+
+								<f:selectItem itemLabel="Selecione: " />
+								<f:selectItem itemLabel="Funcionario" itemValue="FUNCIONARIO" />
+								<f:selectItem itemLabel="Administrador"
+									itemValue="ADMINISTRADOR" />
+								<f:selectItem itemLabel="Gerente" itemValue="GERENTE" />
+
+							</p:selectOneMenu>
+						</p:row>
+					</p:column>
+
+					<p:column>
+						<p:row>
+							<p:message for="tipoEntidade" />
+						</p:row>
+					</p:column>
+
+
+					<p:column>
+						<p:row>
+							<h:outputLabel for="ent_inativo" value="Ativo : "
+								id="labelInativo" />
+						</p:row>
+					</p:column>
+
+					<p:column>
+						<p:row>
+							<p:selectBooleanCheckbox id="ent_inativo"
+								value="#{funcionarioBeanView.objetoSelecionado.ent_inativo}" />
+						</p:row>
+					</p:column>
+
+					<p:column>
+						<p:row>
+							<p:message for="ent_inativo" />
+						</p:row>
+					</p:column>
+
+					<p:column>
+						<p:row>
+							<h:outputLabel for="email" value="Email : " id="labelEmail" />
+						</p:row>
+					</p:column>
+
+					<p:column>
+						<p:row>
+							<p:inputText id="email" required="true" maxlength="100"
+								requiredMessage="Informe o email" style="width:350px"
+								value="#{funcionarioBeanView.objetoSelecionado.email}" />
+						</p:row>
+					</p:column>
+
+					<p:column>
+						<p:row>
+							<p:message for="email" />
+						</p:row>
+					</p:column>
+
+
+					<p:column>
+						<p:row>
+							<h:outputLabel for="ent_login" value="Login : " id="labelLogin" />
+						</p:row>
+					</p:column>
+
+					<p:column>
+						<p:row>
+							<p:inputText id="ent_login" required="true" maxlength="100"
+								requiredMessage="Informe o login" style="width:350px"
+								value="#{funcionarioBeanView.objetoSelecionado.ent_login}" />
+						</p:row>
+					</p:column>
+
+					<p:column>
+						<p:row>
+							<p:message for="ent_login" />
+						</p:row>
+					</p:column>
+
+
+					<p:column>
+						<p:row>
+							<h:outputLabel for="ent_senha" value="Senha : " id="labelSenha" />
+						</p:row>
+					</p:column>
+
+					<p:column>
+						<p:row>
+							<p:password id="ent_senha" required="true"
+								requiredMessage="Informe a senha" style="width:350px"
+								value="#{funcionarioBeanView.objetoSelecionado.ent_senha}" />
+						</p:row>
+					</p:column>
+
+					<p:column>
+						<p:row>
+							<p:message for="ent_senha" />
+						</p:row>
+					</p:column>
+
+
+				</p:panelGrid>
+			</p:panel>
+
+
+			<util:botoesCrud managedBeanView="#{funcionarioBeanView}"
+				camposReload=":formTemplate:msg , tableResult"
+				botaoNovo="#{contextoBean.possuiAcesso('ADMIN', 'FUNCIONARIO_NOVO')}"
+				botaoSalvar="#{contextoBean.possuiAcesso('ADMIN', 'FUNCIONARIO_NOVO') and funcionarioBeanView.objetoSelecionado.ent_codigo == null}"
+				botaoAtualizar="#{contextoBean.possuiAcesso('ADMIN', 'FUNCIONARIO_EDITAR') and funcionarioBeanView.objetoSelecionado.ent_codigo != null}"
+				botaoExcluir="#{contextoBean.possuiAcesso('ADMIN', 'FUNCIONARIO_EXCLUIR')}">
+
+			</util:botoesCrud>
+
+		</h:form>
+
+		<p:dataTable id="tableResult" value="#{funcionarioBeanView.list.list}"
+			emptyMessage="Não existem registros" rows="10" paginator="true"
+			lazy="true" var="objeto" paginatorPosition="bottom">
+
+			<ui:include
+				src="/resources/components/colunasDataTableFuncionairos.xhtml" />
+
+
+
+		</p:dataTable>
+
+
+
+
+
+
+	</ui:define>
+
+</ui:composition>
+
+
+
+</html>

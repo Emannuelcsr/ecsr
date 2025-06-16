@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:sec="http://www.springframework.org/security/facelets/tags"
+	xmlns:util="http://java.sun.com/jsf/composite/components"
+	xmlns:p="http://primefaces.org/ui">
+
+
+<p:column style="width:100px;">
+	<center>
+		<f:facet name="header">Código</f:facet>
+		<h:outputText value="#{objeto.ent_codigo}" />
+	</center>
+</p:column>
+
+
+<p:column style="width:100px;">
+	<center>
+		<f:facet name="header">Funcionario</f:facet>
+		<h:outputText value="#{objeto.ent_nomefantasia}" />
+	</center>
+</p:column>
+
+<p:column style="width:50px;">
+	<center>
+		<f:facet name="header">Editar</f:facet>
+		<p:commandLink immediate="true" ajax="true"
+			action="#{funcionarioBeanView.editar}">
+			<f:setPropertyActionListener value="#{objeto}"
+				target="#{funcionarioBeanView.objetoSelecionado}" />
+			<h:graphicImage library="img" name="textEdit.png" />
+		</p:commandLink>
+
+	</center>
+</p:column>
+
+
+
+<sec:ifAnyGranted roles="ADMIN">
+	<p:column style="width:50px;">
+		<center>
+			<f:facet name="header">Excluir</f:facet>
+			<p:commandLink action="#{funcionarioBeanView.softExcluir}"
+				partialSubmit="true" process="@this" immediate="true" ajax="false"
+				update="tableResult">
+				<h:graphicImage library="img" name="delete.png" />
+				<f:setPropertyActionListener value="#{objeto}"
+					target="#{funcionarioBeanView.objetoSelecionado}" />
+
+			</p:commandLink>
+		</center>
+	</p:column>
+</sec:ifAnyGranted>
+
+</html>

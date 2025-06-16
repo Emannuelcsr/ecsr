@@ -68,6 +68,7 @@
 		<mapping class="br.com.project.model.classes.Pais"></mapping>
 		<mapping class="br.com.project.model.classes.Cidade"></mapping>
 		<mapping class="br.com.project.model.classes.Estado"></mapping>
+		<mapping class="br.com.project.model.classes.Mensagem"></mapping>
 
 		<!-- Listeners do Hibernate Envers para auditoria automática -->
 		<listener

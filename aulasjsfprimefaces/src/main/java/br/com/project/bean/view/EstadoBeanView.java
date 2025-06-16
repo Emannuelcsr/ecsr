@@ -55,5 +55,14 @@ public class EstadoBeanView extends BeanManagedViewAbstract {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+
+
+
+	@Override
+	public void softExcluir() throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

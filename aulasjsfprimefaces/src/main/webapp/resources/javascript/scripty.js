@@ -245,9 +245,9 @@ function getValorElementPorIdJQuery(id) {
 
 }
 
-function teste(){
+function teste() {
 	alert("oi");
-	
+
 }
 
 function addMascaraPesquisa(elemento) {
@@ -311,13 +311,35 @@ function addMascaraPesquisa(elemento) {
 
 
 function validarCampoPesquisa(valor) {
-    if (valor != undefined && valor.value != undefined) {
-        if (valor.value.trim() == '') {
-            valor.value = "";
-        } else {
-            valor.value = valor.value.trim();
-        }
-    }
+	if (valor != undefined && valor.value != undefined) {
+		if (valor.value.trim() == '') {
+			valor.value = "";
+		} else {
+			valor.value = valor.value.trim();
+		}
+	}
+}
+
+function pesquisaUserDestinoPerderFocoDialog(codigoUser) {
+
+	if (codigoUser != '') {
+
+		$("#usr_destinoMsgDialog").val('');//limpa o campo
+		$("#loginDestinoMsgDialog").val('');//limpa o campo
+
+		$.get("buscarUsuarioDestinoMsg?codEntidade=" + codigoUser, function(resposta) {
+			if (resposta.trim() != '') {
+
+				var entidade = JSON.parse(resposta);
+
+				$("#usr_destinoMsgDialog").val(entidade.ent_codigo);
+				$("#loginDestinoMsgDialog").val(entidade.ent_login);
+			}
+		});
+	}
+
+
+
 }
 
 

@@ -29,6 +29,7 @@ public interface InterfaceCrud<T>  extends Serializable{
 	// salva
 	void save(T obj) throws Exception;
 	
+	void inativar(T obj) throws Exception;
 	
 	void persist(T obj) throws Exception;
 	

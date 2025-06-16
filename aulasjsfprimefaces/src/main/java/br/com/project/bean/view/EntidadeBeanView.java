@@ -96,7 +96,7 @@ public class EntidadeBeanView extends BeanManagedViewAbstract {
 	 */
 	@Override
 	public String condicaoAndParaPesquisa() throws Exception {
-		return null;
+		return " AND entity.ent_inativo = false ";
 	}
 
 	public void updateSenha() throws Exception {
@@ -138,6 +138,12 @@ public class EntidadeBeanView extends BeanManagedViewAbstract {
 			error();
 		}
 
+	}
+
+	@Override
+	public void softExcluir() throws Exception {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

@@ -133,4 +133,6 @@ public interface ActionViewPadrao extends Serializable {
      * @throws Exception caso ocorra erro na operação
      */
     void addMsg(String msg) throws Exception;
+
+	void softExcluir() throws Exception;
 }

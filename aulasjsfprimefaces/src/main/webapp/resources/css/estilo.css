@@ -23,7 +23,7 @@
 .imgPesquisa {
 	height: 15px;
 	width: 18px;
-	background-image: url("#{resource['img/zoom.gif']}") !important;
+	background-image: url("#{resource['img/zoom.png']}") !important;
 }
 
 .imgAdiciona {
@@ -713,4 +713,11 @@ button.blue {
     background-color: #e0e0e0;
     color: #000;
     cursor: pointer;
+}
+
+.custom-dialog .ui-dialog {
+    border: 3px solid #4CAF50;
+    border-radius: 15px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.3);
+    background-color: #f9f9f9;
 }

@@ -361,4 +361,18 @@ public class ImplementacaoCrud<T> implements InterfaceCrud<T> {
 
 	    return obj;  // Retorna o objeto encontrado, ou null se não encontrado
 	}
-}
+
+	@Override
+	public void inativar(T obj) throws Exception {
+	    if (obj instanceof Entidade) {
+	        Entidade entidade = (Entidade) obj;
+	        entidade.setEnt_inativo(true); // marca como inativo
+	        update(obj); // atualiza no banco
+	    } else {
+	        throw new IllegalArgumentException("Objeto não é do tipo Entidade");
+	    }
+	}
+
+	
+
+	}

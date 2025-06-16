@@ -37,4 +37,12 @@ public class EntidadeController extends ImplementacaoCrud <Entidade> implements 
 		
 	}
 
+
+	public boolean existeCpf(String cpf) throws Exception {
+
+		
+		return super.findListByQueryDinamic("from Entidade where cpf = '" + cpf + "'").size() > 0;
+		
+	}
+
 }

@@ -169,6 +169,12 @@ public class LoginBeanView extends BeanManagedViewAbstract {
 		return null;
 	}
 
+	@Override
+	public void softExcluir() throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
 	
 	
 

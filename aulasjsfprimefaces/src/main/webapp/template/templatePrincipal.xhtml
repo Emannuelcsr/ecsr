@@ -184,7 +184,10 @@
 						<p:commandLink id="enviarMensagem" value="Enviar Mensagem"
 							actionListener="#{mensagemBeanView.novo}"
 							onsuccess="enviarMsgDialog.show();" styleClass="menu-link"
-							immediate="true" ajax="true" process="@this" />
+							immediate="true" ajax="true" process="@this">
+							<p:ajax immediate="true" listener="#{mensagemBeanView.novo}" />
+
+						</p:commandLink>
 					</sec:ifAnyGranted>
 
 					<!-- Link para abrir o diálogo de alteração de senha -->
@@ -198,33 +201,46 @@
 
 
 				<!-- ***********************************************Menu lateral*********************************************** -->
+				<!-- Barra de menu lateral -->
 				<div id="barramenu">
 					<p:tieredMenu id="menuEsquerdo"
-						style="width:185px; border: none; background:none; color:#000;">
+						style="width:185px; border: none; background: none; color: #000;">
 
+						<!-- Verifica se o usuário tem permissão para acessar os cadastros -->
 						<sec:ifAnyGranted roles="CADASTRO_ACESSAR, ADMIN">
 
-							<p:submenu label="PESQUISA" id="subMenuPesquisa">
-								<sec:ifAnyGranted roles="CIDADE_ACESSAR,ADMIN">
-									<p:menuitem value="Cidade" id="menuCidadePesquisa"
+							<!-- Submenu de Pesquisa -->
+							<p:submenu label="PESQUISA" id="submenuPesquisa">
+
+								<!-- Acesso à pesquisa de cidades -->
+								<sec:ifAnyGranted roles="CIDADE_ACESSAR, ADMIN">
+									<p:menuitem value="CIDADE" id="menuPesquisaCidade"
 										action="#{cidadeBeanView.redirecionarFindEntidade}"
 										immediate="true" />
 								</sec:ifAnyGranted>
+
+								<!-- Acesso à pesquisa de funcionários -->
+								<sec:ifAnyGranted roles="FUNCIONARIO_ACESSAR, ADMIN">
+									<p:menuitem value="FUNCIONÁRIO" id="menuPesquisaFuncionario"
+										action="#{funcionarioBeanView.redirecionarFindEntidade}"
+										immediate="true" />
+								</sec:ifAnyGranted>
+
 							</p:submenu>
-
-
 
 						</sec:ifAnyGranted>
 
-						<!-- Acesso rápido -->
-						<p:menuitem value="INÍCIO" id="menuinicio" ajax="true"
-							onclick="redirecionarPagina('#{request.contextPath}','/restrito/principal');" />
+						<!-- Acesso rápido: página inicial -->
+						<p:menuitem value="INÍCIO" id="menuInicio" ajax="true"
+							onclick="redirecionarPagina('#{request.contextPath}', '/restrito/principal');" />
 
-						<p:menuitem onclick="javascript:logout('#{request.contextPath}');"
-							value="SAIR" id="menusair" ajax="true" />
+						<!-- Opção de logout -->
+						<p:menuitem value="SAIR" id="menuSair" ajax="true"
+							onclick="javascript:logout('#{request.contextPath}');" />
 
 					</p:tieredMenu>
 				</div>
+
 
 				<!-- ***********************************************Menu lateral*********************************************** -->
 			</div>
@@ -235,8 +251,9 @@
 			<p:dialog widgetVar="enviarMsgDialog" id="enviarMsgDialog"
 				width="800px" modal="true" resizable="false" height="360px"
 				header="Enviar Mensagem" dynamic="true" appendToBody="false"
-				draggable="false">
-
+				draggable="false" styleClass="custom-dialog"
+				onShow="setTimeout(function() { addFocoCampo('usr_destinoMsgDialog'); }, 100);">
+				<ui:include src="/cadastro/dialog_enviar_mensagem.xhtml" />
 			</p:dialog>
 			<!-- ***********************************************Diálogo de envio de mensagem*********************************************** -->
 

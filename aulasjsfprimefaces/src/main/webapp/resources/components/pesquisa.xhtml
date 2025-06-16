@@ -18,6 +18,9 @@
 		<cc:attribute name="menuImpressao" required="false" default="false" />
 		<cc:attribute name="novoPesquisa" required="true" default="true" />
 		<cc:attribute name="colunasGridDataTableList" required="true" />
+		<cc:attribute name="funcaoJS" required="false" />
+		<cc:attribute name="exibirBotaoSelecionar" required="true"
+			default="false" />
 	</cc:interface>
 
 	<cc:implementation>
@@ -100,10 +103,19 @@
 			rowKey="#{objeto}" rowIndexVar="index" paginator="true"
 			rowsPerPageTemplate="5,10,20" emptyMessage="Não possui registros">
 
-			<p:ajax event="rowSelect" global="false"
-				listener="#{cc.attrs.managedBeanView.onRowSelect}" />
-
 			<ui:include src="#{cc.attrs.colunasGridDataTableList}" />
+
+			<p:column id="colunaSelecionar"
+				rendered="#{cc.attrs.exibirBotaoSelecionar}">
+				<center>
+					<f:facet name="header">Selecionar</f:facet>
+					<p:commandLink id="addPesquisa" immediate="true"
+						partialSubmit="true" ajax="true" process="@this, colunaSelecionar"
+						onclick="#{cc.attrs.funcaoJS}">
+						<h:graphicImage library="img" name="add_16.png" />
+					</p:commandLink>
+				</center>
+			</p:column>
 
 
 		</p:dataTable>

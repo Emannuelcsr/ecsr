@@ -19,285 +19,238 @@ import br.com.project.util.all.UtilitariaRegex;
 
 /**
  * Classe abstrata base para Beans de visualização. Fornece funcionalidades
- * reutilizáveis como: - Geração dinâmica de campos para pesquisa - Integração
- * com relatórios
- * 
+ * reutilizáveis como: geração dinâmica de campos para pesquisa e integração com relatórios.
  * Essa classe deve ser estendida por Beans de View como "CidadeBeanView".
  */
 @Component // Componente gerenciado pelo Spring
 public abstract class BeanManagedViewAbstract extends BeanReportView {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	// *******************************************************************************************************************************
-	// *******************************************************************************************************************************
-	// *******************************************************************************************************************************
-	// --------------------------------------------------------------------------------------------------------------------
-	// MÉTODOS ABSTRATOS: devem ser implementados nas subclasses
-	// --------------------------------------------------------------------------------------------------------------------
-	// *******************************************************************************************************************************
-	// *******************************************************************************************************************************
-	// *******************************************************************************************************************************
+    // *******************************************************************************************************************************
+    // MÉTODOS ABSTRATOS - devem ser implementados nas subclasses
+    // *******************************************************************************************************************************
 
-	/**
-	 * Retorna a classe da entidade associada (ex: Cidade.class).
-	 */
-	protected abstract Class<?> getClassImplement();
+    /**
+     * Deve retornar a classe da entidade associada (ex: Cidade.class).
+     */
+    protected abstract Class<?> getClassImplement();
 
-	public abstract String condicaoAndParaPesquisa() throws Exception;
+    /**
+     * Define cláusulas adicionais para compor a condição de pesquisa com AND.
+     */
+    public abstract String condicaoAndParaPesquisa() throws Exception;
 
-	/**
-	 * Retorna o controller que implementa InterfaceCrud (ex: cidadeController).
-	 */
-	protected abstract InterfaceCrud<?> getController();
+    /**
+     * Retorna o controller que implementa InterfaceCrud (ex: cidadeController).
+     */
+    protected abstract InterfaceCrud<?> getController();
 
-	public String valorPesquisa;
+    // Valor digitado pelo usuário para consulta
+    public String valorPesquisa;
 
-	// *******************************************************************************************************************************
-	// *******************************************************************************************************************************
-	// *******************************************************************************************************************************
-	// --------------------------------------------------------------------------------------------------------------------
-	// ATRIBUTOS PARA CONDIÇÃO DE PESQUISA
-	// --------------------------------------------------------------------------------------------------------------------
-	// *******************************************************************************************************************************
-	// *******************************************************************************************************************************
-	// *******************************************************************************************************************************
+    // *******************************************************************************************************************************
+    // ATRIBUTOS E MÉTODOS RELACIONADOS À CONDIÇÃO DE PESQUISA
+    // *******************************************************************************************************************************
 
-	public List<SelectItem> listaCondicaoPesquisa;
-	public CondicaoPesquisa condicaoPesquisaSelecionado;
+    // Lista das condições de pesquisa disponíveis (Ex: IGUAL_A, CONTEM, etc)
+    public List<SelectItem> listaCondicaoPesquisa;
 
-	/**
-	 * Retorna a lista de condições de pesquisa disponíveis (ex: igual, contém,
-	 * etc.)
-	 */
-	public List<SelectItem> getListaCondicaoPesquisa() {
-		listaCondicaoPesquisa = new ArrayList<SelectItem>();
+    // Condição de pesquisa selecionada pelo usuário
+    public CondicaoPesquisa condicaoPesquisaSelecionado;
 
-		for (CondicaoPesquisa condicaoPesquisa : CondicaoPesquisa.values()) {
-			listaCondicaoPesquisa.add(new SelectItem(condicaoPesquisa, condicaoPesquisa.toString()));
-		}
+    /**
+     * Retorna a lista de condições de pesquisa disponíveis (ex: igual, contém, etc.)
+     */
+    public List<SelectItem> getListaCondicaoPesquisa() {
+        listaCondicaoPesquisa = new ArrayList<SelectItem>();
 
-		return listaCondicaoPesquisa;
-	}
+        for (CondicaoPesquisa condicaoPesquisa : CondicaoPesquisa.values()) {
+            listaCondicaoPesquisa.add(new SelectItem(condicaoPesquisa, condicaoPesquisa.toString()));
+        }
 
-	/**
-	 * Retorna a condição de pesquisa atualmente selecionada pelo usuário.
-	 */
-	public CondicaoPesquisa getCondicaoPesquisaSelecionado() {
-		return condicaoPesquisaSelecionado;
-	}
+        return listaCondicaoPesquisa;
+    }
 
-	/**
-	 * Define a condição de pesquisa atualmente selecionada.
-	 */
-	public void setCondicaoPesquisaSelecionado(CondicaoPesquisa condicaoPesquisaSelecionado) {
-		this.condicaoPesquisaSelecionado = condicaoPesquisaSelecionado;
-	}
+    public CondicaoPesquisa getCondicaoPesquisaSelecionado() {
+        return condicaoPesquisaSelecionado;
+    }
 
-	public void setValorPesquisa(String valorPesquisa) {
-		this.valorPesquisa = valorPesquisa;
-	}
+    public void setCondicaoPesquisaSelecionado(CondicaoPesquisa condicaoPesquisaSelecionado) {
+        this.condicaoPesquisaSelecionado = condicaoPesquisaSelecionado;
+    }
 
-	public String getValorPesquisa() {
-		return valorPesquisa != null ? new UtilitariaRegex().retiraAcentos(valorPesquisa) : "";
-	}
+    public void setValorPesquisa(String valorPesquisa) {
+        this.valorPesquisa = valorPesquisa;
+    }
 
-	// *******************************************************************************************************************************
-	// *******************************************************************************************************************************
-	// *******************************************************************************************************************************
-	// --------------------------------------------------------------------------------------------------------------------
-	// ATRIBUTOS PARA CAMPO DE PESQUISA
-	// --------------------------------------------------------------------------------------------------------------------
-	// *******************************************************************************************************************************
-	// *******************************************************************************************************************************
-	// *******************************************************************************************************************************
+    /**
+     * Retorna o valor de pesquisa tratado (sem acentos).
+     */
+    public String getValorPesquisa() {
+        return valorPesquisa != null ? new UtilitariaRegex().retiraAcentos(valorPesquisa) : "";
+    }
 
-	/**
-	 * Campo selecionado pelo usuário no menu de pesquisa. Este campo será
-	 * preenchido automaticamente via JSF com o SelectItem.
-	 */
-	public ObjetoCampoConsulta objetoCampoConsultaSelecionado;
+    // *******************************************************************************************************************************
+    // ATRIBUTOS E MÉTODOS RELACIONADOS AO CAMPO DE PESQUISA (campo selecionado pelo usuário)
+    // *******************************************************************************************************************************
 
-	/**
-	 * Retorna o campo selecionado para pesquisa.
-	 */
-	public ObjetoCampoConsulta getObjetoCampoConsultaSelecionado() {
-		return objetoCampoConsultaSelecionado;
-	}
+    // Campo selecionado para consulta pelo usuário via selectOneMenu
+    public ObjetoCampoConsulta objetoCampoConsultaSelecionado;
 
-	// *******************************************************************************************************************************
-	// *******************************************************************************************************************************
-	// *******************************************************************************************************************************
-	/**
-	 * Define o campo selecionado pelo usuário e preenche informações adicionais com
-	 * base na anotação @IdentificaCampoPesquisa da entidade.
-	 */
-	public void setObjetoCampoConsultaSelecionado(ObjetoCampoConsulta objetoCampoConsultaSelecionado) {
+    public ObjetoCampoConsulta getObjetoCampoConsultaSelecionado() {
+        return objetoCampoConsultaSelecionado;
+    }
 
-		if (objetoCampoConsultaSelecionado != null) {
-			for (Field field : getClassImplement().getDeclaredFields()) {
-				if (field.isAnnotationPresent(IdentificaCampoPesquisa.class)) {
-					if (objetoCampoConsultaSelecionado.getCampoBanco().equalsIgnoreCase(field.getName())) {
+    /**
+     * Define o campo selecionado para pesquisa com base na anotação da entidade.
+     */
+    public void setObjetoCampoConsultaSelecionado(ObjetoCampoConsulta objetoCampoConsultaSelecionado) {
 
-						String descricaoCampo = field.getAnnotation(IdentificaCampoPesquisa.class).descricaoCampo();
+        if (objetoCampoConsultaSelecionado != null) {
+            for (Field field : getClassImplement().getDeclaredFields()) {
+                if (field.isAnnotationPresent(IdentificaCampoPesquisa.class)) {
+                    if (objetoCampoConsultaSelecionado.getCampoBanco().equalsIgnoreCase(field.getName())) {
 
-						objetoCampoConsultaSelecionado.setDescricao(descricaoCampo);
-						objetoCampoConsultaSelecionado.setTipoClass(field.getType().getCanonicalName());
-						objetoCampoConsultaSelecionado
-								.setPrincipal(field.getAnnotation(IdentificaCampoPesquisa.class).principal());
+                        // Define a descrição e tipo do campo consultado com base na anotação
+                        String descricaoCampo = field.getAnnotation(IdentificaCampoPesquisa.class).descricaoCampo();
 
-						break;
-					}
-				}
-			}
-		}
+                        objetoCampoConsultaSelecionado.setDescricao(descricaoCampo);
+                        objetoCampoConsultaSelecionado.setTipoClass(field.getType().getCanonicalName());
+                        objetoCampoConsultaSelecionado.setPrincipal(field.getAnnotation(IdentificaCampoPesquisa.class).principal());
 
-		this.objetoCampoConsultaSelecionado = objetoCampoConsultaSelecionado;
-	}
+                        break;
+                    }
+                }
+            }
+        }
 
-	// *******************************************************************************************************************************
-	// *******************************************************************************************************************************
-	// *******************************************************************************************************************************
+        this.objetoCampoConsultaSelecionado = objetoCampoConsultaSelecionado;
+    }
 
-	/**
-	 * Lista de campos disponíveis para pesquisa, preenchida dinamicamente.
-	 */
-	List<SelectItem> listaCampoPesquisa;
+    // *******************************************************************************************************************************
+    // MÉTODO PARA GERAR DINAMICAMENTE OS CAMPOS DE PESQUISA A PARTIR DAS ANOTAÇÕES NAS ENTIDADES
+    // *******************************************************************************************************************************
 
-	// --------------------------------------------------------------------------------------------------------------------
-	// GERAÇÃO DINÂMICA DE CAMPOS PARA PESQUISA
-	// --------------------------------------------------------------------------------------------------------------------
+    // Lista de campos de pesquisa disponíveis
+    List<SelectItem> listaCampoPesquisa;
 
-	/**
-	 * Gera dinamicamente os campos da entidade anotados
-	 * com @IdentificaCampoPesquisa. Esses campos serão exibidos em um
-	 * <f:selectItems> em tela, por exemplo, dentro de um <p:selectOneMenu>.
-	 * 
-	 * @return Lista de SelectItem prontos para uso em componentes JSF.
-	 */
-	public List<SelectItem> getListaCampoPesquisa() {
+    /**
+     * Gera dinamicamente os campos da entidade anotados com @IdentificaCampoPesquisa.
+     * Esses campos são usados como opções de pesquisa na interface.
+     */
+    public List<SelectItem> getListaCampoPesquisa() {
 
-		// Instancia a lista que será retornada, contendo os itens do selectOneMenu
-		listaCampoPesquisa = new ArrayList<SelectItem>();
+        listaCampoPesquisa = new ArrayList<SelectItem>();
+        List<ObjetoCampoConsulta> listaTemporaria = new ArrayList<ObjetoCampoConsulta>();
 
-		// Lista temporária de objetos que representam os campos disponíveis para
-		// pesquisa
-		List<ObjetoCampoConsulta> listaTemporaria = new ArrayList<ObjetoCampoConsulta>();
+        for (Field field : getClassImplement().getDeclaredFields()) {
 
-		// Percorre todos os campos declarados da classe da entidade (via reflexão)
-		for (Field field : getClassImplement().getDeclaredFields()) {
+            if (field.isAnnotationPresent(IdentificaCampoPesquisa.class)) {
 
-			// Verifica se o campo possui a anotação @IdentificaCampoPesquisa
-			if (field.isAnnotationPresent(IdentificaCampoPesquisa.class)) {
+                String descricao = field.getAnnotation(IdentificaCampoPesquisa.class).descricaoCampo();
+                String campoPesquisa = field.getAnnotation(IdentificaCampoPesquisa.class).campoConsulta();
+                int isPrincipal = field.getAnnotation(IdentificaCampoPesquisa.class).principal();
 
-				// Extrai as informações da anotação
-				String descricao = field.getAnnotation(IdentificaCampoPesquisa.class).descricaoCampo();
-				String campoPesquisa = field.getAnnotation(IdentificaCampoPesquisa.class).campoConsulta();
-				int isPrincipal = field.getAnnotation(IdentificaCampoPesquisa.class).principal();
+                ObjetoCampoConsulta objetoCampoConsulta = new ObjetoCampoConsulta();
+                objetoCampoConsulta.setDescricao(descricao);
+                objetoCampoConsulta.setCampoBanco(campoPesquisa);
+                objetoCampoConsulta.setPrincipal(isPrincipal);
+                objetoCampoConsulta.setTipoClass(field.getType().getCanonicalName());
 
-				// Cria um novo ObjetoCampoConsulta com os dados coletados
-				ObjetoCampoConsulta objetoCampoConsulta = new ObjetoCampoConsulta();
-				objetoCampoConsulta.setDescricao(descricao); // Descrição visível no menu
-				objetoCampoConsulta.setCampoBanco(campoPesquisa); // Nome do campo no banco
-				objetoCampoConsulta.setPrincipal(isPrincipal); // Se é o campo principal da pesquisa (1 ou 0)
-				objetoCampoConsulta.setTipoClass(field.getType().getCanonicalName()); // Tipo do campo (ex:
-																						// java.lang.String)
+                listaTemporaria.add(objetoCampoConsulta);
+            }
+        }
 
-				// Adiciona na lista temporária
-				listaTemporaria.add(objetoCampoConsulta);
-			}
-		}
+        // Ordena os campos pela flag principal (prioridade)
+        orderReverse(listaTemporaria);
 
-		// Ordena os campos por prioridade (o campo com principal = 1 vai aparecer no
-		// topo)
-		orderReverse(listaTemporaria);
+        for (ObjetoCampoConsulta objetoCampoConsulta : listaTemporaria) {
+            listaCampoPesquisa.add(new SelectItem(objetoCampoConsulta));
+        }
 
-		// Transforma cada ObjetoCampoConsulta em um SelectItem para exibir no
-		// <f:selectItems>
-		for (ObjetoCampoConsulta objetoCampoConsulta : listaTemporaria) {
-			listaCampoPesquisa.add(new SelectItem(objetoCampoConsulta));
-			// OBS: Aqui o itemValue será o próprio objeto ObjetoCampoConsulta
-		}
+        return listaCampoPesquisa;
+    }
 
-		// Retorna a lista final com todos os itens prontos para o componente de menu
-		return listaCampoPesquisa;
-	}
+    /**
+     * Ordena os campos de pesquisa por prioridade.
+     * Campos com principal = 1 aparecem primeiro.
+     */
+    private void orderReverse(List<ObjetoCampoConsulta> listaTemporaria) {
+        Collections.sort(listaTemporaria, new Comparator<ObjetoCampoConsulta>() {
+            @Override
+            public int compare(ObjetoCampoConsulta o1, ObjetoCampoConsulta o2) {
+                return o1.getPrincipal().compareTo(o2.getPrincipal());
+            }
+        });
+    }
 
-	// --------------------------------------------------------------------------------------------------------------------
-	// MÉTODO AUXILIAR: ORDENA OS CAMPOS POR PRIORIDADE
-	// --------------------------------------------------------------------------------------------------------------------
+    // *******************************************************************************************************************************
+    // MÉTODOS PARA GERAÇÃO DE CONSULTAS SQL DINÂMICAS
+    // *******************************************************************************************************************************
 
-	/**
-	 * Ordena os campos de pesquisa de acordo com a flag "principal". Campos com
-	 * principal = 1 aparecem antes dos demais.
-	 */
-	private void orderReverse(List<ObjetoCampoConsulta> listaTemporaria) {
-		Collections.sort(listaTemporaria, new Comparator<ObjetoCampoConsulta>() {
-			@Override
-			public int compare(ObjetoCampoConsulta o1, ObjetoCampoConsulta o2) {
-				return o1.getPrincipal().compareTo(o2.getPrincipal());
-			}
-		});
-	}
+    /**
+     * Gera o SQL usado para fazer a consulta paginada (LazyDataModel, por exemplo).
+     */
+    public String getSqlLazyQuery() throws Exception {
+        StringBuilder sql = new StringBuilder();
+        sql.append(" Select entity from  ");
+        sql.append(getQueryConsulta());
+        sql.append(" order by entity.");
+        sql.append(objetoCampoConsultaSelecionado.getCampoBanco());
 
-	public String getSqlLazyQuery() throws Exception {
+        return sql.toString();
+    }
 
-		StringBuilder sql = new StringBuilder();
+    /**
+     * Gera o SQL base da cláusula FROM + WHERE + filtro com retira_acentos().
+     */
+    private Object getQueryConsulta() throws Exception {
 
-		sql.append(" Select entity from  ");
-		sql.append(getQueryConsulta());
-		sql.append(" order by entity.");
-		sql.append(objetoCampoConsultaSelecionado.getCampoBanco());
+        valorPesquisa = new UtilitariaRegex().retiraAcentos(valorPesquisa);
 
-		return sql.toString();
-	}
+        StringBuilder sql = new StringBuilder();
+        sql.append(getClassImplement().getSimpleName());
+        sql.append(" entity where ");
+        sql.append(" retira_acentos(upper(cast(entity.");
+        sql.append(objetoCampoConsultaSelecionado.getCampoBanco());
+        sql.append(" as text))) ");
 
-	private Object getQueryConsulta() throws Exception {
+        // Aplica a condição de pesquisa selecionada
+        if (condicaoPesquisaSelecionado.name().equals(CondicaoPesquisa.IGUAL_A.name())) {
+            sql.append(" = retira_acentos(upper('");
+            sql.append(valorPesquisa);
+            sql.append("'))");
 
-		valorPesquisa = new UtilitariaRegex().retiraAcentos(valorPesquisa);
+        } else if (condicaoPesquisaSelecionado.name().equals(CondicaoPesquisa.CONTEM.name())) {
+            sql.append(" like retira_acentos(upper('%");
+            sql.append(valorPesquisa);
+            sql.append("%'))");
 
-		StringBuilder sql = new StringBuilder();
+        } else if (condicaoPesquisaSelecionado.name().equals(CondicaoPesquisa.TERMINA_COM.name())) {
+            sql.append(" like retira_acentos(upper('%");
+            sql.append(valorPesquisa);
+            sql.append("'))");
 
-		sql.append(getClassImplement().getSimpleName());
-		sql.append(" entity where ");
-		sql.append(" retira_acentos(upper(cast(entity.");
-		sql.append(objetoCampoConsultaSelecionado.getCampoBanco());
-		sql.append(" as text))) ");
+        } else if (condicaoPesquisaSelecionado.name().equals(CondicaoPesquisa.INICIA.name())) {
+            sql.append(" like retira_acentos(upper('");
+            sql.append(valorPesquisa);
+            sql.append("%'))");
+        }
 
-		if (condicaoPesquisaSelecionado.name().equals(CondicaoPesquisa.IGUAL_A.name())) {
-			sql.append(" = retira_acentos(upper('");
-			sql.append(valorPesquisa);
-			sql.append("'))");
-		} else if (condicaoPesquisaSelecionado.name().equals(CondicaoPesquisa.CONTEM.name())) {
-			sql.append(" like retira_acentos(upper('%");
-			sql.append(valorPesquisa);
-			sql.append("%'))");
+        // Adiciona cláusula AND adicional
+        sql.append(" ");
+        sql.append(condicaoAndParaPesquisa());
 
-		} else if (condicaoPesquisaSelecionado.name().equals(CondicaoPesquisa.TERMINA_COM.name())) {
-			sql.append(" like retira_acentos(upper('%");
-			sql.append(valorPesquisa);
-			sql.append("'))");
+        return sql.toString();
+    }
 
-		} else if (condicaoPesquisaSelecionado.name().equals(CondicaoPesquisa.INICIA.name())) {
-			sql.append(" like retira_acentos(upper('");
-			sql.append(valorPesquisa);
-			sql.append("%'))");
-
-		}
-
-		sql.append(" ");
-		sql.append(condicaoAndParaPesquisa());
-		
-		
-		return sql.toString();
-	}
-
-	public int totalRegistroConsulta() throws Exception {
-
-		Query query = getController().obterQuery(" select count(entity) from   " + getQueryConsulta());
-
-		Number resultado = (Number) query.uniqueResult();
-
-		return resultado.intValue();
-	}
-}
+    /**
+     * Executa a contagem total de registros para a consulta atual.
+     */
+    public int totalRegistroConsulta() throws Exception {
+        Query query = getController().obterQuery(" select count(entity) from   " + getQueryConsulta());
+        Number resultado = (Number) query.uniqueResult();
+        return resultado.intValue();
+    }
+} 

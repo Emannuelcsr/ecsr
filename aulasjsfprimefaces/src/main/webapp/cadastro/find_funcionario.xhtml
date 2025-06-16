@@ -14,11 +14,11 @@
 <ui:composition template="/template/templatePrincipal.xhtml">
 
 	<ui:define name="corpo">
-		<util:pesquisa managedBeanView="#{cidadeBeanView}"
+		<util:pesquisa managedBeanView="#{funcionarioBeanView}"
 			menuImpressao="true"
-			ocultaNovo="#{contextoBean.possuiAcesso('CIDADE_NOVO', 'ADMIN')}"
-			novoPesquisa="Pesquisa de Cidade"
-			colunasGridDataTableList="/resources/components/colunasDataTableCidade.xhtml" 
+			ocultaNovo="#{contextoBean.possuiAcesso('FUNCIONARIO_NOVO', 'ADMIN')}"
+			novoPesquisa="Pesquisa de Funcionarios"
+			colunasGridDataTableList="/resources/components/colunasDataTableFuncionairos.xhtml" 
 			exibirBotaoSelecionar = "false">
 
 		</util:pesquisa>

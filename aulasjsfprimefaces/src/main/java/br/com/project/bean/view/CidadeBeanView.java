@@ -159,4 +159,10 @@ public class CidadeBeanView extends BeanManagedViewAbstract {
 		return "";
 	}
 
+	@Override
+	public void softExcluir() throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
